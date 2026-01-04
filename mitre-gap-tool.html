@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MITRE Coverage & Gap Assessment Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <style>
+:root {
+    color-scheme: dark;
+    --bg: #020617;
+    --surface: #0b1220;
+    --surface-soft: #131c33;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --accent: #38bdf8;
+    --accent-strong: #fbbf24;
+    --border: rgba(255,255,255,0.08);
+    --danger: #fb7185;
+    --warning: #facc15;
+    --success: #4ade80;
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    background: radial-gradient(circle at top right, rgba(56,189,248,0.15), transparent 40%), var(--bg);
+    color: var(--text);
+    padding: 1.5rem;
+    min-height: 100vh;
+    font-size: 0.9rem;
+}
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+.hero {
+    background: linear-gradient(120deg, rgba(124,58,237,0.35), rgba(3,105,161,0.25));
+    border-radius: 24px;
+    padding: 1.8rem;
+    border: 1px solid var(--border);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.45);
+}
+.hero .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.78rem;
+    color: var(--accent);
+    margin: 0;
+}
+.hero h1 {
+    margin: 0.35rem 0 0.4rem;
+    font-size: clamp(1.6rem, 4vw, 2.1rem);
+}
+.hero p {
+    margin: 0;
+    max-width: 760px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+.hero-steps {
+    margin: 1rem 0 0;
+    padding-left: 1.2rem;
+    color: var(--muted);
+    line-height: 1.6;
+    font-size: 0.88rem;
+}
+.hero-steps li {
+    margin-bottom: 0.4rem;
+}
+.site-nav {
+    background: rgba(19, 28, 51, 0.7);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 999px;
+    padding: 1.2rem 1.3rem;
+    box-shadow: 0 26px 52px rgba(1, 5, 21, 0.55);
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(18px);
+}
+.site-nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+}
+.site-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text) !important;
+    text-decoration: none;
+}
+.site-brand__mark {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #26de50, var(--accent));
+    box-shadow: 0 0 0 4px rgba(49, 85, 255, 0.16);
+    display: inline-block;
+}
+.site-brand__text {
+    color: inherit !important;
+    line-height: 1;
+}
+.site-menu {
+    display: flex;
+    gap: 1.2rem;
+    align-items: center;
+}
+.site-menu__link {
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--text) !important;
+    transition: color 0.2s ease;
+}
+.site-menu__link:hover {
+    color: var(--accent-strong) !important;
+}
+.site-nav__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+.site-menu__toggle {
+    border: 1px solid rgba(255,255,255,0.25);
+    background: transparent;
+    color: var(--text);
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.site-menu__drawer {
+    border-radius: 1.2rem;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(9, 16, 34, 0.85);
+    padding: 1rem;
+    box-shadow: 0 26px 52px rgba(1, 5, 21, 0.55);
+    backdrop-filter: blur(16px);
+    margin-top: 0.75rem;
+}
+.site-footer {
+    margin-top: 2rem;
+    background: rgba(12, 21, 45, 0.7);
+    border-radius: 1.8rem;
+    padding: 1.6rem;
+    box-shadow: 0 36px 64px rgba(1, 5, 21, 0.6);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(16px);
+    text-align: center;
+}
+.site-footer__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+.site-footer__copy {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0;
+}
+.site-footer__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+.site-footer__nav a,
+a.site-footer__nav {
+    color: var(--muted);
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+.site-footer__nav a:hover,
+a.site-footer__nav:hover {
+    color: var(--accent);
+}
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 1.25rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+.filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+.control {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.control label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+}
+.control-hint {
+    margin: -0.15rem 0 0.15rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+}
+select {
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.65rem 0.8rem;
+    color: var(--text);
+    font-size: 0.95rem;
+}
+select:focus {
+    outline: 2px solid rgba(56,189,248,0.4);
+    border-color: transparent;
+}
+.chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+button.chip {
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.3rem 0.8rem;
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+button.chip.active {
+    background: var(--accent);
+    color: #02101f;
+    border-color: transparent;
+}
+.checkbox-inline {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.3rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.8rem;
+}
+.summary-card {
+    background: var(--surface-soft);
+    border-radius: 16px;
+    padding: 0.9rem;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.summary-card span {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+}
+.summary-card strong {
+    display: block;
+    font-size: 1.5rem;
+    margin-top: 0.3rem;
+}
+.summary-card small {
+    color: var(--muted);
+    font-size: 0.8rem;
+}
+.tactic-focus-note {
+    margin-top: 0.3rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+.tactic-breakdown {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.8rem;
+}
+.tactic-card {
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 0.9rem;
+    background: rgba(255,255,255,0.02);
+}
+.tactic-card header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+.tactic-card h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+.badge {
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+.badge.good { background: rgba(74,222,128,0.2); color: var(--success); }
+.badge.warn { background: rgba(250,204,21,0.15); color: var(--warning); }
+.badge.danger { background: rgba(251,113,133,0.2); color: var(--danger); }
+.progress {
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    margin: 0.5rem 0;
+    overflow: hidden;
+}
+.progress span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+}
+.table-wrapper {
+    overflow-x: auto;
+}
+.table-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+.table-controls__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+.table-controls__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+.table-pagination {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+}
+.table-pagination--top {
+    margin-left: auto;
+    justify-content: flex-end;
+}
+.table-pagination--bottom {
+    justify-content: flex-end;
+    margin-top: 0.6rem;
+}
+.table-pagination__size {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+}
+.table-pagination__size label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+}
+.table-pagination__size select {
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.3rem 0.9rem;
+    color: var(--text);
+    font-size: 0.82rem;
+}
+.table-pagination__pager {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+.table-controls button {
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    padding: 0.4rem 0.9rem;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+}
+.table-controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+th, td {
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 0.5rem;
+    text-align: left;
+}
+th {
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+}
+.coverage-toggle {
+    border-radius: 999px;
+    border: none;
+    padding: 0.35rem 0.8rem;
+    cursor: pointer;
+    font-size: 0.76rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+.coverage-toggle.gap {
+    background: rgba(251,113,133,0.15);
+    color: var(--danger);
+}
+.coverage-toggle.covered {
+    background: rgba(74,222,128,0.15);
+    color: var(--success);
+}
+textarea {
+    width: 100%;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--text);
+    padding: 1rem;
+    font-size: 0.95rem;
+    min-height: 200px;
+}
+.report-actions {
+    margin-top: 0.6rem;
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+}
+.copy-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 0.6rem 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    background: linear-gradient(120deg, var(--accent), var(--accent-strong));
+    color: #04101f;
+    cursor: pointer;
+    box-shadow: 0 18px 36px rgba(56,189,248,0.25);
+}
+.copy-status {
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+.placeholder {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+@media (max-width: 640px) {
+    body { padding: 1rem; }
+    .filters { grid-template-columns: 1fr; }
+}
+    </style>
+</head>
+<body lang="en-US" class="is-page" data-theme="dark">
+    <div class="container my-auto">
+        <div class="site-nav">
+            <div class="site-nav__inner">
+                <a class="site-brand" href="https://chintangurjar.com/">
+                    <span class="site-brand__mark"></span>
+                    <span class="site-brand__text">Cyber Frogy</span>
+                </a>
+                <nav class="site-menu d-none d-md-flex">
+                    <a class="site-menu__link" href="https://chintangurjar.com/">Home</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/whoami/">Whoami</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/posts/">Blog</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/mindmaps/">Mindmaps</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/threat-actor-db/">Threat-Actor DB</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/github/">GitHub</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/checklists/">Checklists</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/kickstartcareer/">Kickstart Career</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/disclaimer/">Disclaimer</a>
+                </nav>
+                <div class="site-nav__actions">
+                    <button class="navbar-toggler site-menu__toggle d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#site-menu-drawer" aria-controls="site-menu-drawer" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse site-menu__drawer d-md-none" id="site-menu-drawer">
+                <nav class="d-flex flex-column gap-2">
+                    <a class="site-menu__link" href="https://chintangurjar.com/">Home</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/whoami/">Whoami</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/posts/">Blog</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/mindmaps/">Mindmaps</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/threat-actor-db/">Threat-Actor DB</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/github/">GitHub</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/checklists/">Checklists</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/kickstartcareer/">Kickstart Career</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/disclaimer/">Disclaimer</a>
+                </nav>
+            </div>
+        </div>
+        <main class="page-shell shell">
+            <div class="page">
+                <header class="hero">
+                    <p class="eyebrow">Leadership planning</p>
+                    <h1>MITRE Coverage & Gap Assessment Tool</h1>
+                    <p>
+                        Use this tool to check your MITRE ATT&CK coverage, find weak spots, and share a simple update with leadership or partners.
+                    </p>
+                    <ol class="hero-steps">
+                        <li><strong>Scope:</strong> Choose the ATT&CK domain, tactics, and platforms that match your environment.</li>
+                        <li><strong>Assess:</strong> Mark the techniques you already cover and see the KPIs move right away.</li>
+                        <li><strong>Prioritise:</strong> Look at the risk numbers and decide which gaps to fix first.</li>
+                        <li><strong>Share:</strong> Copy the executive summary text and paste it into email, slides, or reports.</li>
+                    </ol>
+                </header>
+        <section class="card filters">
+            <div class="control">
+                <label for="domain-select">Domain</label>
+                <p class="control-hint">Pick enterprise-attack or any other ATT&CK domain you work with daily.</p>
+                <select id="domain-select"></select>
+            </div>
+            <div class="control">
+                <label>Tactic Focus</label>
+                <p class="control-hint">Switch the chips on or off to view only the tactics that matter to you.</p>
+                <div class="chip-group" id="tactic-filters"></div>
+            </div>
+            <div class="control">
+                <label>Platforms</label>
+                <p class="control-hint">Select the platforms (SaaS, Windows, Linux, containers, etc.) present in your setup.</p>
+                <div class="chip-group" id="platform-filters"></div>
+            </div>
+        </section>
+        <section class="card">
+            <p class="placeholder" id="load-status">Loading MITRE ATT&CK data…</p>
+            <div class="summary-grid" id="summary-grid" hidden>
+                <div class="summary-card">
+                    <span>Techniques In Scope</span>
+                    <strong id="metric-techniques">—</strong>
+                    <small id="metric-scope">Filters applied</small>
+                </div>
+                <div class="summary-card">
+                    <span>Covered</span>
+                    <strong id="metric-covered">—</strong>
+                    <small id="metric-coverage">—</small>
+                </div>
+                <div class="summary-card">
+                    <span>Average Risk</span>
+                    <strong id="metric-risk">—</strong>
+                    <small id="metric-risknote">—</small>
+                </div>
+                <div class="summary-card">
+                    <span>High-Risk Gaps</span>
+                    <strong id="metric-gaps">—</strong>
+                    <small id="metric-gapnote">—</small>
+                </div>
+            </div>
+        </section>
+        <section class="card">
+            <h2>Tactic Coverage Snapshot</h2>
+            <p class="tactic-focus-note" id="tactic-focus-note">Focus: All tactics in scope.</p>
+            <p class="placeholder" id="tactic-empty">Configure filters to see tactic coverage.</p>
+            <div class="tactic-breakdown" id="tactic-breakdown" hidden></div>
+        </section>
+        <section class="card">
+            <div class="table-controls">
+                <div class="table-controls__meta">
+                    <strong>Technique Workbench</strong>
+                    <span id="technique-count" class="placeholder"></span>
+                </div>
+                <div class="table-controls__actions">
+                    <button type="button" id="select-all">Select All In Scope</button>
+                    <button type="button" id="clear-selection">Clear Selection</button>
+                    <button type="button" id="mark-selected-covered">Mark Selected Covered</button>
+                    <button type="button" id="mark-selected-gap">Mark Selected Gap</button>
+                    <button type="button" id="mark-covered">Mark All Covered</button>
+                    <button type="button" id="reset-covered">Reset Coverage</button>
+                </div>
+                <div class="table-pagination table-pagination--top">
+                    <div class="table-pagination__pager">
+                        <button type="button" id="prev-page">Prev</button>
+                        <span id="page-info">Page 1/1</span>
+                        <button type="button" id="next-page">Next</button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="selection-toggle-all" aria-label="Select all rows" />
+                            </th>
+                            <th>Technique</th>
+                            <th>Tactics</th>
+                            <th>Platforms</th>
+                            <th>Domain</th>
+                            <th>Relationships</th>
+                            <th>Risk</th>
+                            <th>Coverage</th>
+                        </tr>
+                    </thead>
+                    <tbody id="technique-table"></tbody>
+                </table>
+            </div>
+            <div class="table-pagination table-pagination--bottom">
+                <div class="table-pagination__size">
+                    <label for="page-size">Rows per page</label>
+                    <select id="page-size" aria-label="Rows per page">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="all">All</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+        <section class="card">
+            <h2>Executive Summary Draft</h2>
+            <textarea id="report-output" readonly>Loading…</textarea>
+            <div class="report-actions">
+                <button class="copy-btn" id="copy-summary">Copy Summary</button>
+                <span class="copy-status" id="copy-status"></span>
+            </div>
+        </section>
+            </div>
+        </main>
+        <footer class="site-footer">
+            <div class="site-footer__inner">
+                <a class="site-brand" href="https://chintangurjar.com/">
+                    <span class="site-brand__mark"></span>
+                    <span class="site-brand__text">Cyber Frogy</span>
+                </a>
+                <div class="site-footer__copy"></div>
+                <div class="site-footer__nav">
+                    <a class="site-footer__nav" href="https://chintangurjar.com/">Home</a>
+                    <a class="site-footer__nav" href="https://chintangurjar.com/whoami/">Whoami</a>
+                    <a class="site-footer__nav" href="https://chintangurjar.com/posts/">Blog</a>
+                    <a class="site-footer__nav" href="https://chintangurjar.com/mindmaps/">Mindmaps</a>
+                    <a class="site-footer__nav" href="https://chintangurjar.com/threat-actor-db/">Threat-Actor DB</a>
+                    <a class="site-footer__nav" href="https://chintangurjar.com/github/">GitHub</a>
+                    <a class="site-footer__nav" href="https://chintangurjar.com/checklists/">Checklists</a>
+                    <a class="site-footer__nav" href="https://chintangurjar.com/kickstartcareer/">Kickstart Career</a>
+                    <a class="site-footer__nav" href="https://chintangurjar.com/disclaimer/">Disclaimer</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script>
+const STORAGE_KEY = "leadershipCoverageSelections_v1";
+const state = {
+    techniques: [],
+    filtered: [],
+    tacticOptions: [],
+    platformOptions: [],
+    domainOptions: [],
+    domain: "enterprise-attack",
+    tactics: new Set(),
+    platforms: new Set(),
+    coverage: new Map(),
+    selection: new Set(),
+    pageSize: 10,
+    page: 1,
+};
+let lastMetrics = null;
+
+function loadCoverageFromStorage() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        state.coverage = new Map(parsed);
+    } catch (err) {
+        console.warn("Unable to load saved coverage", err);
+    }
+}
+
+function persistCoverage() {
+    try {
+        const payload = JSON.stringify(Array.from(state.coverage.entries()));
+        localStorage.setItem(STORAGE_KEY, payload);
+    } catch (err) {
+        console.warn("Unable to persist coverage selections", err);
+    }
+}
+
+function parseMetadata(metadata) {
+    const meta = {};
+    (metadata || "").split("|").forEach(part => {
+        const [key, value] = part.split(":");
+        if (!key || value === undefined) return;
+        meta[key.trim()] = value.trim();
+    });
+    return meta;
+}
+
+function normalizeList(value, fallback) {
+    if (!value) return fallback ? [fallback] : [];
+    return value.split(",").map(chunk => chunk.trim()).filter(Boolean);
+}
+
+function computeRiskScore(tactics, relationships, detection) {
+    let risk = 0.35;
+    risk += Math.min(relationships / 40, 0.35);
+    const highTactics = new Set(["Initial Access","Execution","Persistence","Privilege Escalation","Defense Evasion","Credential Access","Lateral Movement","Impact"]);
+    if (tactics.some(t => highTactics.has(t))) {
+        risk += 0.2;
+    }
+    if (!detection || detection.toLowerCase().includes("gap")) {
+        risk += 0.1;
+    }
+    return Math.min(risk, 1);
+}
+
+function transformTechniques(records) {
+    return records
+        .filter(record => record.type === "Technique")
+        .map(record => {
+            const meta = parseMetadata(record.metadata);
+            const tactics = normalizeList(meta["Tactics"], "Unmapped");
+            const platforms = normalizeList(meta["Platforms"], "Unspecified");
+            const relationships = parseInt(meta["Relationships"], 10) || 0;
+            const detection = meta["Detection"] || "Unknown";
+            const domains = (record.domains && record.domains.length ? record.domains : ["enterprise-attack"]);
+            return {
+                id: record.id,
+                name: record.name,
+                url: record.url,
+                summary: record.summary,
+                tactics,
+                platforms,
+                domains,
+                relationships,
+                detection,
+                risk: computeRiskScore(tactics, relationships, detection),
+            };
+        });
+}
+
+function buildChips(containerId, options, handler) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+    const allBtn = document.createElement("button");
+    allBtn.type = "button";
+    allBtn.className = "chip";
+    allBtn.dataset.value = "__all";
+    allBtn.textContent = "All";
+    allBtn.addEventListener("click", () => handler("__all"));
+    container.appendChild(allBtn);
+    options.forEach(value => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "chip";
+        btn.dataset.value = value;
+        btn.textContent = value;
+        btn.addEventListener("click", () => handler(value));
+        container.appendChild(btn);
+    });
+}
+
+function syncChipState(containerId, activeSet) {
+    const container = document.getElementById(containerId);
+    container.querySelectorAll(".chip").forEach(btn => {
+        const value = btn.dataset.value;
+        if (value === "__all") {
+            btn.classList.toggle("active", activeSet.size === 0);
+        } else {
+            btn.classList.toggle("active", activeSet.has(value));
+        }
+    });
+}
+
+function getFilteredTechniques() {
+    return state.techniques.filter(tech => {
+        if (state.domain !== "all" && !tech.domains.includes(state.domain)) {
+            return false;
+        }
+        if (state.tactics.size && !tech.tactics.some(tac => state.tactics.has(tac))) {
+            return false;
+        }
+        if (state.platforms.size && !tech.platforms.some(plat => state.platforms.has(plat))) {
+            return false;
+        }
+        return true;
+    });
+}
+
+function coverageStatus(id) {
+    return state.coverage.get(id) === true;
+}
+
+function toggleCoverage(id) {
+    if (coverageStatus(id)) {
+        state.coverage.delete(id);
+    } else {
+        state.coverage.set(id, true);
+    }
+    persistCoverage();
+    updateDashboard();
+}
+
+function markFiltered(covered) {
+    state.filtered.forEach(tech => {
+        if (covered) {
+            state.coverage.set(tech.id, true);
+        } else {
+            state.coverage.delete(tech.id);
+        }
+    });
+    persistCoverage();
+    updateDashboard();
+}
+
+function toggleRowSelection(id, selected) {
+    if (selected) {
+        state.selection.add(id);
+    } else {
+        state.selection.delete(id);
+    }
+    refreshSelectionSummary();
+}
+
+function selectAllInScope() {
+    if (!lastMetrics) return;
+    lastMetrics.sortedTechniques.forEach(tech => state.selection.add(tech.id));
+    syncRowCheckboxes();
+    refreshSelectionSummary();
+}
+
+function clearRowSelection() {
+    state.selection.clear();
+    syncRowCheckboxes();
+    refreshSelectionSummary();
+}
+
+function markSelected(covered) {
+    if (!state.selection.size) {
+        return;
+    }
+    state.selection.forEach(id => {
+        if (covered) {
+            state.coverage.set(id, true);
+        } else {
+            state.coverage.delete(id);
+        }
+    });
+    persistCoverage();
+    updateDashboard();
+}
+
+function refreshSelectionSummary() {
+    const countLabel = document.getElementById("technique-count");
+    const metrics = lastMetrics;
+    const master = document.getElementById("selection-toggle-all");
+    const selectAllBtn = document.getElementById("select-all");
+    const hasRows = Boolean(metrics && metrics.total);
+    if (selectAllBtn) {
+        selectAllBtn.disabled = !hasRows;
+    }
+    ["mark-covered", "reset-covered"].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+            btn.disabled = !hasRows;
+        }
+    });
+    if (!metrics || !metrics.total) {
+        countLabel.textContent = "Nothing to display";
+        if (master) {
+            master.checked = false;
+            master.indeterminate = false;
+            master.disabled = true;
+        }
+        ["mark-selected-covered", "mark-selected-gap", "clear-selection"].forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) btn.disabled = true;
+        });
+        return;
+    }
+    const selectedAll = metrics.sortedTechniques.reduce((count, tech) => count + (state.selection.has(tech.id) ? 1 : 0), 0);
+    countLabel.textContent = `${metrics.total} techniques in scope · ${selectedAll} selected`;
+    const visibleSelected = metrics.visibleTechniques.reduce((count, tech) => count + (state.selection.has(tech.id) ? 1 : 0), 0);
+    if (master) {
+        master.disabled = false;
+        const visibleCount = metrics.visibleTechniques.length;
+        if (!visibleCount) {
+            master.checked = false;
+            master.indeterminate = false;
+        } else if (!visibleSelected) {
+            master.checked = false;
+            master.indeterminate = false;
+        } else if (visibleSelected === visibleCount) {
+            master.checked = true;
+            master.indeterminate = false;
+        } else {
+            master.checked = false;
+            master.indeterminate = true;
+        }
+    }
+    ["mark-selected-covered", "mark-selected-gap", "clear-selection"].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.disabled = state.selection.size === 0;
+    });
+}
+
+function syncRowCheckboxes() {
+    if (!lastMetrics) return;
+    document.querySelectorAll("input[data-tech-id]").forEach(input => {
+        input.checked = state.selection.has(input.dataset.techId);
+    });
+}
+
+function formatPercent(value) {
+    return `${Math.round(value * 100)}%`;
+}
+
+function classifyBadge(value) {
+    if (value >= 0.75) return "danger";
+    if (value >= 0.4) return "warn";
+    return "good";
+}
+
+function renderSummary(metrics) {
+    const loadingText = document.getElementById("load-status");
+    const grid = document.getElementById("summary-grid");
+    loadingText.hidden = metrics.total > 0;
+    grid.hidden = metrics.total === 0;
+    if (!metrics.total) {
+        loadingText.textContent = "No techniques match your filters yet.";
+        return;
+    }
+    document.getElementById("metric-techniques").textContent = metrics.total;
+    const scopeParts = [];
+    scopeParts.push(state.domain === "all" ? "All domains" : state.domain);
+    scopeParts.push(state.tactics.size ? `${state.tactics.size} tactic filter(s)` : "All tactics");
+    scopeParts.push(state.platforms.size ? `${state.platforms.size} platform filter(s)` : "All platforms");
+    document.getElementById("metric-scope").textContent = scopeParts.join(" · ");
+    document.getElementById("metric-covered").textContent = metrics.covered;
+    document.getElementById("metric-coverage").textContent = metrics.total ? `${formatPercent(metrics.coverage)}` : "—";
+    document.getElementById("metric-risk").textContent = metrics.total ? (metrics.avgRisk * 100).toFixed(0) : "—";
+    document.getElementById("metric-risknote").textContent = metrics.total ? "Mean risk score" : "Awaiting scope";
+    document.getElementById("metric-gaps").textContent = metrics.highRiskGaps.length;
+    document.getElementById("metric-gapnote").textContent = metrics.highRiskGaps.length ? "High risk uncovered techniques" : "No high risk gaps";
+}
+
+function renderTacticBreakdown(metrics) {
+    const container = document.getElementById("tactic-breakdown");
+    const placeholder = document.getElementById("tactic-empty");
+    const note = document.getElementById("tactic-focus-note");
+    if (note) {
+        if (!metrics.total) {
+            note.textContent = "Focus: Apply filters to populate tactics.";
+        } else if (state.tactics.size) {
+            note.textContent = `Focus: ${Array.from(state.tactics).join(", ")}`;
+        } else {
+            note.textContent = "Focus: All tactics in scope.";
+        }
+    }
+    if (!metrics.tactics.length) {
+        placeholder.hidden = false;
+        container.hidden = true;
+        return;
+    }
+    placeholder.hidden = true;
+    container.hidden = false;
+    container.innerHTML = "";
+    metrics.tactics.forEach(entry => {
+        const card = document.createElement("article");
+        card.className = "tactic-card";
+        const badgeClass = classifyBadge(1 - entry.coverageRatio);
+        card.innerHTML = `
+            <header>
+                <h3>${entry.name}</h3>
+                <span class="badge ${badgeClass}">${formatPercent(entry.coverageRatio)}</span>
+            </header>
+            <div class="progress"><span style="width:${entry.coverageRatio * 100}%"></span></div>
+            <p>${entry.covered}/${entry.total} techniques marked as covered.</p>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function renderTechniqueTable(metrics) {
+    const tbody = document.getElementById("technique-table");
+    tbody.innerHTML = "";
+    if (!metrics.total) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.colSpan = 8;
+        cell.className = "placeholder";
+        cell.textContent = "Adjust filters to populate the workbench.";
+        row.appendChild(cell);
+        tbody.appendChild(row);
+        refreshSelectionSummary();
+        return;
+    }
+    metrics.visibleTechniques.forEach(tech => {
+        const row = document.createElement("tr");
+
+        const selectCell = document.createElement("td");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.dataset.techId = tech.id;
+        checkbox.checked = state.selection.has(tech.id);
+        checkbox.addEventListener("change", event => {
+            toggleRowSelection(tech.id, event.target.checked);
+        });
+        selectCell.appendChild(checkbox);
+        row.appendChild(selectCell);
+
+        const techCell = document.createElement("td");
+        const strong = document.createElement("strong");
+        strong.textContent = tech.id;
+        techCell.appendChild(strong);
+        techCell.appendChild(document.createElement("br"));
+        if (tech.url) {
+            const link = document.createElement("a");
+            link.href = tech.url;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = tech.name;
+            techCell.appendChild(link);
+        } else {
+            techCell.appendChild(document.createTextNode(tech.name));
+        }
+        row.appendChild(techCell);
+
+        const tacticsCell = document.createElement("td");
+        tacticsCell.textContent = tech.tactics.join(", ");
+        row.appendChild(tacticsCell);
+
+        const platformsCell = document.createElement("td");
+        platformsCell.textContent = tech.platforms.join(", ");
+        row.appendChild(platformsCell);
+
+        const domainCell = document.createElement("td");
+        domainCell.textContent = tech.domains.join(", ");
+        row.appendChild(domainCell);
+
+        const relCell = document.createElement("td");
+        relCell.textContent = tech.relationships;
+        row.appendChild(relCell);
+
+        const riskCell = document.createElement("td");
+        riskCell.textContent = (tech.risk * 100).toFixed(0);
+        row.appendChild(riskCell);
+
+        const actionCell = document.createElement("td");
+        const button = document.createElement("button");
+        const covered = coverageStatus(tech.id);
+        button.type = "button";
+        button.className = `coverage-toggle ${covered ? "covered" : "gap"}`;
+        button.textContent = covered ? "Covered" : "Gap";
+        button.addEventListener("click", () => toggleCoverage(tech.id));
+        actionCell.appendChild(button);
+        row.appendChild(actionCell);
+
+        tbody.appendChild(row);
+    });
+    attachMasterCheckbox(metrics);
+    refreshSelectionSummary();
+}
+
+function attachMasterCheckbox(metrics) {
+    const master = document.getElementById("selection-toggle-all");
+    if (!master) return;
+    if (!metrics.total) {
+        master.checked = false;
+        master.indeterminate = false;
+        master.disabled = true;
+        master.onchange = null;
+        return;
+    }
+    master.disabled = false;
+    master.onchange = event => {
+        if (event.target.checked) {
+            metrics.visibleTechniques.forEach(tech => state.selection.add(tech.id));
+        } else {
+            metrics.visibleTechniques.forEach(tech => state.selection.delete(tech.id));
+        }
+        syncRowCheckboxes();
+        refreshSelectionSummary();
+    };
+}
+
+function updatePaginationControls(metrics) {
+    const pageInfo = document.getElementById("page-info");
+    const prevBtn = document.getElementById("prev-page");
+    const nextBtn = document.getElementById("next-page");
+    const pageSizeSelect = document.getElementById("page-size");
+    if (pageSizeSelect) {
+        pageSizeSelect.value = String(state.pageSize);
+    }
+    if (!metrics.total) {
+        if (pageInfo) pageInfo.textContent = "Page 0 / 0";
+        if (prevBtn) prevBtn.disabled = true;
+        if (nextBtn) nextBtn.disabled = true;
+        return;
+    }
+    if (state.pageSize === "all") {
+        if (pageInfo) pageInfo.textContent = `All rows (${metrics.total})`;
+        if (prevBtn) prevBtn.disabled = true;
+        if (nextBtn) nextBtn.disabled = true;
+        return;
+    }
+    if (pageInfo) pageInfo.textContent = `Page ${metrics.page} / ${metrics.pageCount}`;
+    if (prevBtn) prevBtn.disabled = metrics.page <= 1;
+    if (nextBtn) nextBtn.disabled = metrics.page >= metrics.pageCount;
+}
+
+function buildReport(metrics) {
+    if (!metrics.total) {
+        return "No scope selected. Choose tactics and platforms to generate a summary.";
+    }
+    const tacticFocus = state.tactics.size ? Array.from(state.tactics).join(", ") : "full ATT&CK tactic surface";
+    const platformFocus = state.platforms.size ? Array.from(state.platforms).join(", ") : "all supported platforms";
+    const domainFocus = state.domain === "all" ? "all MITRE domains" : state.domain;
+    const primaryGap = metrics.topGaps[0];
+    const riskLine = metrics.highRiskGaps.length
+        ? `${metrics.highRiskGaps.length} high-risk techniques remain uncovered (top: ${primaryGap ? `${primaryGap.name} ${primaryGap.id}` : "n/a"}).`
+        : "All scoped high-risk techniques are covered.";
+    const tacticWeakness = metrics.tactics.length ? metrics.tactics.reduce((worst, current) => current.coverageRatio < worst.coverageRatio ? current : worst, metrics.tactics[0]) : null;
+    const tacticLine = tacticWeakness
+        ? `${tacticWeakness.name} shows the lowest coverage at ${formatPercent(tacticWeakness.coverageRatio)} (${tacticWeakness.covered}/${tacticWeakness.total}).`
+        : "Tactic mix balanced.";
+    return [
+        `Scope: ${domainFocus} · ${tacticFocus} · ${platformFocus}. ${metrics.total} techniques in focus, ${metrics.covered} marked as covered (${formatPercent(metrics.coverage)}).`,
+        tacticLine,
+        riskLine,
+    ].join("\n");
+}
+
+function renderReport(metrics) {
+    document.getElementById("report-output").value = buildReport(metrics);
+}
+
+
+function updateDashboard() {
+    if (!state.techniques.length) return;
+    const filtered = getFilteredTechniques();
+    state.filtered = filtered;
+    const sortedTechniques = [...filtered].sort((a, b) => b.risk - a.risk);
+    const coverageCounts = filtered.reduce((acc, tech) => {
+        const covered = coverageStatus(tech.id);
+        if (covered) acc.covered += 1;
+        acc.riskSum += tech.risk;
+        tech.tactics.forEach(tactic => {
+            if (!acc.tacticMap.has(tactic)) {
+                acc.tacticMap.set(tactic, { name: tactic, total: 0, covered: 0 });
+            }
+            const entry = acc.tacticMap.get(tactic);
+            entry.total += 1;
+            if (covered) entry.covered += 1;
+        });
+        if (!covered) {
+            acc.uncovered.push(tech);
+            if (tech.risk >= 0.7) {
+                acc.highRisk.push(tech);
+            }
+        }
+        return acc;
+    }, { covered: 0, riskSum: 0, tacticMap: new Map(), uncovered: [], highRisk: [] });
+
+    const total = filtered.length;
+    const pageCount = total ? (state.pageSize === "all" ? 1 : Math.max(1, Math.ceil(total / state.pageSize))) : 0;
+    if (!pageCount) {
+        state.page = 1;
+    } else if (state.page > pageCount) {
+        state.page = pageCount;
+    } else if (state.page < 1) {
+        state.page = 1;
+    }
+    const effectiveSize = state.pageSize === "all" ? total || 1 : state.pageSize;
+    const startIndex = state.pageSize === "all" ? 0 : (state.page - 1) * effectiveSize;
+    const endIndex = state.pageSize === "all" ? undefined : startIndex + effectiveSize;
+    const visibleTechniques = state.pageSize === "all" ? sortedTechniques : sortedTechniques.slice(startIndex, endIndex);
+
+    const metrics = {
+        total,
+        covered: coverageCounts.covered,
+        coverage: total ? coverageCounts.covered / total : 0,
+        avgRisk: total ? coverageCounts.riskSum / total : 0,
+        highRiskGaps: coverageCounts.highRisk,
+        topGaps: coverageCounts.uncovered.sort((a, b) => b.risk - a.risk).slice(0, 5),
+        tactics: Array.from(coverageCounts.tacticMap.values())
+            .map(entry => ({
+                ...entry,
+                coverageRatio: entry.total ? entry.covered / entry.total : 0,
+            }))
+            .sort((a, b) => a.coverageRatio - b.coverageRatio),
+        sortedTechniques,
+        visibleTechniques,
+        page: pageCount ? state.page : 1,
+        pageSize: state.pageSize,
+        pageCount,
+    };
+
+    const visibleIds = new Set(metrics.sortedTechniques.map(tech => tech.id));
+    state.selection.forEach(id => {
+        if (!visibleIds.has(id)) {
+            state.selection.delete(id);
+        }
+    });
+    lastMetrics = metrics;
+    renderSummary(metrics);
+    renderTacticBreakdown(metrics);
+    renderTechniqueTable(metrics);
+    updatePaginationControls(metrics);
+    renderReport(metrics);
+    syncChipState("tactic-filters", state.tactics);
+    syncChipState("platform-filters", state.platforms);
+}
+
+function populateDomainSelect() {
+    const select = document.getElementById("domain-select");
+    select.innerHTML = "";
+    state.domainOptions.forEach(domain => {
+        const option = document.createElement("option");
+        option.value = domain;
+        option.textContent = domain === "all" ? "All Domains" : domain;
+        select.appendChild(option);
+    });
+    select.value = state.domain;
+    select.addEventListener("change", event => {
+        state.domain = event.target.value;
+        updateDashboard();
+    });
+}
+
+function setupControls() {
+    document.getElementById("mark-covered").addEventListener("click", () => markFiltered(true));
+    document.getElementById("reset-covered").addEventListener("click", () => markFiltered(false));
+    document.getElementById("select-all").addEventListener("click", () => selectAllInScope());
+    document.getElementById("clear-selection").addEventListener("click", () => clearRowSelection());
+    document.getElementById("mark-selected-covered").addEventListener("click", () => markSelected(true));
+    document.getElementById("mark-selected-gap").addEventListener("click", () => markSelected(false));
+    document.getElementById("copy-summary").addEventListener("click", async () => {
+        const text = document.getElementById("report-output").value;
+        const status = document.getElementById("copy-status");
+        try {
+            await navigator.clipboard.writeText(text);
+            status.textContent = "Summary copied.";
+        } catch (err) {
+            status.textContent = "Clipboard unavailable.";
+        }
+        setTimeout(() => { status.textContent = ""; }, 2500);
+    });
+    const pageSizeSelect = document.getElementById("page-size");
+    if (pageSizeSelect) {
+        pageSizeSelect.addEventListener("change", event => {
+            const value = event.target.value;
+            state.pageSize = value === "all" ? "all" : parseInt(value, 10);
+            state.page = 1;
+            updateDashboard();
+        });
+    }
+    document.getElementById("prev-page").addEventListener("click", () => {
+        if (!lastMetrics || state.pageSize === "all") return;
+        if (state.page > 1) {
+            state.page -= 1;
+            updateDashboard();
+        }
+    });
+    document.getElementById("next-page").addEventListener("click", () => {
+        if (!lastMetrics || state.pageSize === "all") return;
+        const maxPage = lastMetrics && lastMetrics.pageCount ? lastMetrics.pageCount : 1;
+        if (state.page < maxPage) {
+            state.page += 1;
+            updateDashboard();
+        }
+    });
+    refreshSelectionSummary();
+}
+
+async function init() {
+    loadCoverageFromStorage();
+    setupControls();
+    try {
+        const response = await fetch("dashboard-data.json");
+        if (!response.ok) throw new Error(`Failed to load data: ${response.status}`);
+        const payload = await response.json();
+        state.techniques = transformTechniques(payload.records || []);
+        const tacticSet = new Set();
+        const platformSet = new Set();
+        const domainSet = new Set(["all"]);
+        state.techniques.forEach(tech => {
+            tech.tactics.forEach(t => tacticSet.add(t));
+            tech.platforms.forEach(p => platformSet.add(p));
+            tech.domains.forEach(d => domainSet.add(d));
+        });
+        state.tacticOptions = Array.from(tacticSet).sort();
+        state.platformOptions = Array.from(platformSet).sort();
+        state.domainOptions = Array.from(domainSet).sort();
+        buildChips("tactic-filters", state.tacticOptions, value => {
+            if (value === "__all") {
+                state.tactics.clear();
+            } else if (state.tactics.has(value)) {
+                state.tactics.delete(value);
+            } else {
+                state.tactics.add(value);
+            }
+            updateDashboard();
+        });
+        buildChips("platform-filters", state.platformOptions, value => {
+            if (value === "__all") {
+                state.platforms.clear();
+            } else if (state.platforms.has(value)) {
+                state.platforms.delete(value);
+            } else {
+                state.platforms.add(value);
+            }
+            updateDashboard();
+        });
+        populateDomainSelect();
+        updateDashboard();
+    } catch (error) {
+        console.error(error);
+        document.getElementById("load-status").textContent = "Unable to load dashboard-data.json";
+    }
+}
+
+init();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
