@@ -548,10 +548,6 @@ footer {
                     </div>
                 </section>
                 <section class="card full-span">
-                    <h2>Campaign Longevity</h2>
-                    <div id="campaign-timeline"></div>
-                </section>
-                <section class="card full-span">
                     <h2>Interactive Data Explorer</h2>
                     <div class="table-controls">
                         <input type="search" id="record-search" placeholder="Search keywords, IDs, or descriptions" />
@@ -61481,6 +61477,9 @@ function renderBarList(targetId, rows, limit = rows.length) {
 
 function renderTrendChart() {
     const container = document.getElementById("trend-chart");
+    if (!container) {
+        return;
+    }
     const width = container.clientWidth || 600;
     const height = container.clientHeight || 260;
     const padding = 32;
@@ -61759,45 +61758,12 @@ function renderGroupTable() {
     container.appendChild(table);
 }
 
-function renderTimeline() {
-    const container = document.getElementById("campaign-timeline");
-    container.innerHTML = "";
-    if (!data.campaignTimeline.length) {
-        container.textContent = "No campaign timelines available.";
-        return;
-    }
-    const years = data.campaignTimeline.flatMap(row => [row.startYear, row.endYear]);
-    const minYear = Math.min(...years);
-    const maxYear = Math.max(...years);
-    const span = maxYear - minYear || 1;
-    data.campaignTimeline.forEach(row => {
-        const wrapper = document.createElement("div");
-        wrapper.className = "timeline-row";
-        wrapper.title = `${row.name}: ${row.startYear}–${row.endYear} (${row.durationDays} days)`;
-        const label = document.createElement("div");
-        label.className = "timeline-label";
-        label.innerHTML = `<span>${row.name}</span><span>${row.startYear}–${row.endYear}</span>`;
-        const bar = document.createElement("div");
-        bar.className = "timeline-bar";
-        const fill = document.createElement("span");
-        const startPct = ((row.startYear - minYear) / span) * 100;
-        const endPct = ((row.endYear - minYear) / span) * 100;
-        fill.style.left = `${startPct}%`;
-        fill.style.width = `${Math.max(endPct - startPct, 0.5)}%`;
-        bar.appendChild(fill);
-        wrapper.appendChild(label);
-        wrapper.appendChild(bar);
-        container.appendChild(wrapper);
-    });
-}
-
 renderSummary();
 renderHighlights();
 renderBarList("tactic-bars", data.techniquesByTactic, 10);
 renderBarList("platform-bars", data.platforms, 10);
 renderTrendChart();
 renderGroupTable();
-renderTimeline();
 renderSoftwareCoverage();
 renderMitigationHotspots();
 initRecordsTable();
