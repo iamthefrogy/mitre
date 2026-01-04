@@ -89,6 +89,21 @@ body {
 .hero-steps li {
     margin-bottom: 0.4rem;
 }
+.step-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+.step-card h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--accent-strong);
+    letter-spacing: 0.02em;
+}
+.step-card__hint {
+    color: var(--muted);
+    margin: 0;
+}
 .site-nav {
     background: rgba(19, 28, 51, 0.7);
     border: 1px solid rgba(255,255,255,0.1);
@@ -559,24 +574,26 @@ textarea {
                         <li><strong>Share:</strong> Copy the executive summary text and paste it into email, slides, or reports.</li>
                     </ol>
                 </header>
-        <section class="card filters">
-            <div class="control">
-                <label for="domain-select">Domain</label>
-                <p class="control-hint">Pick enterprise-attack or any other ATT&CK domain you work with daily.</p>
-                <select id="domain-select"></select>
+        <section class="card step-card">
+            <h3>1 · Define your ATT&CK scope</h3>
+            <p class="step-card__hint">Select the domain, tactics, and platforms that match your environment. KPIs update instantly.</p>
+            <div class="filters">
+                <div class="control">
+                    <label for="domain-select">Domain</label>
+                    <p class="control-hint">Pick enterprise-attack or any other ATT&CK domain you work with daily.</p>
+                    <select id="domain-select"></select>
+                </div>
+                <div class="control">
+                    <label>Tactic Focus</label>
+                    <p class="control-hint">Switch the chips on or off to view only the tactics that matter to you.</p>
+                    <div class="chip-group" id="tactic-filters"></div>
+                </div>
+                <div class="control">
+                    <label>Platforms</label>
+                    <p class="control-hint">Select the platforms (SaaS, Windows, Linux, containers, etc.) present in your setup.</p>
+                    <div class="chip-group" id="platform-filters"></div>
+                </div>
             </div>
-            <div class="control">
-                <label>Tactic Focus</label>
-                <p class="control-hint">Switch the chips on or off to view only the tactics that matter to you.</p>
-                <div class="chip-group" id="tactic-filters"></div>
-            </div>
-            <div class="control">
-                <label>Platforms</label>
-                <p class="control-hint">Select the platforms (SaaS, Windows, Linux, containers, etc.) present in your setup.</p>
-                <div class="chip-group" id="platform-filters"></div>
-            </div>
-        </section>
-        <section class="card">
             <p class="placeholder" id="load-status">Loading MITRE ATT&CK data…</p>
             <div class="summary-grid" id="summary-grid" hidden>
                 <div class="summary-card">
@@ -601,13 +618,16 @@ textarea {
                 </div>
             </div>
         </section>
-        <section class="card">
-            <h2>Tactic Coverage Snapshot</h2>
+        <section class="card step-card">
+            <h3>2 · Spot weak tactics</h3>
+            <p class="step-card__hint">Use this snapshot to explain which tactics have the poorest coverage after filters.</p>
             <p class="tactic-focus-note" id="tactic-focus-note">Focus: All tactics in scope.</p>
             <p class="placeholder" id="tactic-empty">Configure filters to see tactic coverage.</p>
             <div class="tactic-breakdown" id="tactic-breakdown" hidden></div>
         </section>
-        <section class="card">
+        <section class="card step-card">
+            <h3>3 · Update coverage decisions</h3>
+            <p class="step-card__hint">Select techniques, flip coverage pills, and keep the persistent state in sync with your reality.</p>
             <div class="table-controls">
                 <div class="table-controls__meta">
                     <strong>Technique Workbench</strong>
@@ -660,8 +680,9 @@ textarea {
                 </div>
             </div>
         </section>
-        <section class="card">
-            <h2>Executive Summary Draft</h2>
+        <section class="card step-card">
+            <h3>4 · Share the weekly brief</h3>
+            <p class="step-card__hint">Copy the auto-generated text and drop it into email, Slack, or exec slides.</p>
             <textarea id="report-output" readonly>Loading…</textarea>
             <div class="report-actions">
                 <button class="copy-btn" id="copy-summary">Copy Summary</button>
