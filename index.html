@@ -79,6 +79,55 @@ a { color: var(--accent); }
     padding: 0.95rem;
     box-shadow: 0 20px 40px rgba(0,0,0,0.35);
 }
+.tool-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.9rem;
+}
+@media (max-width: 900px) {
+    .tool-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (max-width: 600px) {
+    .tool-grid {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+}
+.tool-card {
+    border: 1px dashed rgba(255,255,255,0.2);
+    border-radius: 14px;
+    padding: 0.85rem;
+    background: rgba(255,255,255,0.02);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-height: 160px;
+}
+.tool-card h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+}
+.tool-card p {
+    color: var(--muted);
+    margin: 0;
+    font-size: 0.85rem;
+}
+.tool-card__action {
+    margin-top: auto;
+    align-self: flex-start;
+    text-decoration: none;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #04101f;
+    background: linear-gradient(120deg, var(--accent), var(--accent-2));
+}
+.tool-card--placeholder {
+    opacity: 0.7;
+}
 .site-nav {
     background: var(--color-surface-soft);
     border: 1px solid var(--color-border);
@@ -469,9 +518,34 @@ footer {
                     <div id="group-table"></div>
                 </section>
                 <section class="card full-span">
-                    <h2>Catalog Growth Timeline</h2>
-                    <div id="trend-chart" class="chart"></div>
-                    <div id="trend-legend" class="chart-legend"></div>
+                    <h2>Operational Tools</h2>
+                    <div class="tool-grid">
+                        <article class="tool-card">
+                            <div>
+                                <h3>MITRE Coverage & Gap Assessment Tool</h3>
+                                <p>Use this playbook to check ATT&CK coverage fast, mark what you already detect, and share the gap summary with your leaders.</p>
+                            </div>
+                            <a class="tool-card__action" href="mitre-gap-tool.html" target="_blank" rel="noopener">Open Tool</a>
+                        </article>
+                        <article class="tool-card tool-card--placeholder">
+                            <div>
+                                <h3>Tool Slot 02</h3>
+                                <p>Reserved for the next MITRE helper. Stay tuned for a fresh playbook here.</p>
+                            </div>
+                        </article>
+                        <article class="tool-card tool-card--placeholder">
+                            <div>
+                                <h3>Tool Slot 03</h3>
+                                <p>Soon you will see another workflow guide for day-to-day SecOps here.</p>
+                            </div>
+                        </article>
+                        <article class="tool-card tool-card--placeholder">
+                            <div>
+                                <h3>Tool Slot 04</h3>
+                                <p>Space kept ready for a future MITRE dashboard once it is polished.</p>
+                            </div>
+                        </article>
+                    </div>
                 </section>
                 <section class="card full-span">
                     <h2>Campaign Longevity</h2>
@@ -525,7 +599,7 @@ footer {
         </footer>
     </div>
     <script id="dashboard-data" type="application/json">{
-  "generated": "2026-01-03T14:55:28.887904+00:00",
+  "generated": "2026-01-04T01:36:29.607930+00:00",
   "summary": {
     "techniques": 691,
     "subtechniques": 475,

@@ -62,6 +62,23 @@ body {
     color: var(--muted);
     line-height: 1.5;
 }
+.hero-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.hero-back {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-strong);
+    text-decoration: none;
+}
+.hero-back:hover {
+    color: var(--accent);
+}
 .hero-steps {
     margin: 1rem 0 0;
     padding-left: 1.2rem;
@@ -527,7 +544,10 @@ textarea {
         <main class="page-shell shell">
             <div class="page">
                 <header class="hero">
-                    <p class="eyebrow">Leadership planning</p>
+                    <div class="hero-header">
+                        <p class="eyebrow">Leadership planning</p>
+                        <a class="hero-back" href="index.html">Back to dashboard</a>
+                    </div>
                     <h1>MITRE Coverage & Gap Assessment Tool</h1>
                     <p>
                         Use this tool to check your MITRE ATT&CK coverage, find weak spots, and share a simple update with leadership or partners.
