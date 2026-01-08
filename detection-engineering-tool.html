@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Detection Engineering Workbench</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <style>
+:root {
+    color-scheme: dark;
+    --bg: #010617;
+    --surface: #0b1220;
+    --surface-soft: #101a30;
+    --surface-alt: rgba(17, 29, 56, 0.8);
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --accent: #38bdf8;
+    --accent-strong: #fbbf24;
+    --border: rgba(255,255,255,0.08);
+    --danger: #fb7185;
+    --warning: #facc15;
+    --success: #4ade80;
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    background: radial-gradient(circle at top right, rgba(56,189,248,0.15), transparent 40%), var(--bg);
+    color: var(--text);
+    padding: 1.5rem;
+    min-height: 100vh;
+    font-size: 0.9rem;
+    letter-spacing: -0.01em;
+}
+.page {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+.site-nav {
+    background: rgba(19, 28, 51, 0.7);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 999px;
+    padding: 1.2rem 1.3rem;
+    box-shadow: 0 26px 52px rgba(1, 5, 21, 0.55);
+    margin-bottom: 1rem;
+    backdrop-filter: blur(18px);
+}
+.site-nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+}
+.site-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text) !important;
+    text-decoration: none;
+}
+.site-brand__mark {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #26de50, var(--accent));
+    box-shadow: 0 0 0 4px rgba(49, 85, 255, 0.16);
+    display: inline-block;
+}
+.site-brand__text {
+    color: inherit !important;
+    line-height: 1;
+}
+.site-menu {
+    display: flex;
+    gap: 1.2rem;
+    align-items: center;
+}
+.site-menu__link {
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--text) !important;
+    transition: color 0.2s ease;
+}
+.site-menu__link:hover {
+    color: var(--accent-strong) !important;
+}
+.site-nav__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+.site-menu__toggle {
+    border: 1px solid rgba(255,255,255,0.25);
+    background: transparent;
+    color: var(--text);
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.site-menu__drawer {
+    border-radius: 1.2rem;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(9, 16, 34, 0.85);
+    padding: 1rem;
+    box-shadow: 0 26px 52px rgba(1, 5, 21, 0.55);
+    backdrop-filter: blur(16px);
+    margin-top: 0.75rem;
+}
+.hero {
+    background: linear-gradient(120deg, rgba(124,58,237,0.35), rgba(3,105,161,0.25));
+    border-radius: 24px;
+    padding: 1.8rem;
+    border: 1px solid var(--border);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.45);
+}
+.hero .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.78rem;
+    color: var(--accent);
+    margin: 0;
+}
+.hero h1 {
+    margin: 0.35rem 0 0.4rem;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+}
+.hero p {
+    margin: 0;
+    max-width: 800px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+.hero-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.hero-steps {
+    margin: 1rem 0 0;
+    padding-left: 1.2rem;
+    color: var(--muted);
+    line-height: 1.6;
+    font-size: 0.88rem;
+}
+.hero-steps li {
+    margin-bottom: 0.35rem;
+}
+.hero-back {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-strong);
+    text-decoration: none;
+}
+.hero-back:hover {
+    color: var(--accent);
+}
+.step-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.step-card h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: var(--accent-strong);
+    letter-spacing: 0.02em;
+}
+.step-card__hint {
+    margin: -0.2rem 0 0.2rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+}
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 1.25rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+.card h2 {
+    margin-top: 0;
+    margin-bottom: 0.6rem;
+    font-size: 1.05rem;
+}
+.filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.9rem;
+}
+.control {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.control label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+}
+select,
+input[type="search"] {
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.65rem 0.8rem;
+    color: var(--text);
+    font-size: 0.95rem;
+}
+select:focus,
+input[type="search"]:focus {
+    outline: 2px solid rgba(56,189,248,0.4);
+    border-color: transparent;
+}
+.chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+button.chip {
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.3rem 0.75rem;
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+button.chip.active {
+    background: var(--accent);
+    color: #02101f;
+    border-color: transparent;
+}
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.8rem;
+}
+.summary-card {
+    padding: 0.85rem;
+    background: var(--surface-soft);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.summary-card span {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+}
+.summary-card strong {
+    display: block;
+    font-size: 1.45rem;
+}
+.matrix {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+.matrix-tactic {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 16px;
+    padding: 0.9rem;
+}
+.matrix-tactic header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.6rem;
+}
+.matrix-tactic h3 {
+    margin: 0;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+.matrix-tactic__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+}
+.matrix-tactic__progress {
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    overflow: hidden;
+    margin-bottom: 0.4rem;
+}
+.matrix-tactic__progress span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--success), var(--accent));
+}
+.gap-board__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+.gap-board__controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.5rem;
+}
+.gap-board__controls button {
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    border-radius: 999px;
+    padding: 0.25rem 0.8rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+.gap-board__controls button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+.gap-board__controls-buttons {
+    display: flex;
+    gap: 0.4rem;
+}
+.high-level-summary {
+    margin-top: 0.8rem;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 0.9rem;
+    background: rgba(255,255,255,0.02);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+.telemetry-ready {
+    margin-top: 0.8rem;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 0.9rem;
+    background: rgba(255,255,255,0.02);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.telemetry-ready__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+.telemetry-ready__list button {
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    border-radius: 999px;
+    padding: 0.25rem 0.8rem;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.gap-card {
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 0.85rem;
+    background: rgba(255,255,255,0.02);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.gap-card header {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+.gap-card__risk {
+    font-weight: 600;
+    color: var(--danger);
+}
+.gap-card__meta {
+    color: var(--muted);
+    font-size: 0.8rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+.gap-card__actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.detail-panel__empty {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+.detail-panel__title {
+    margin: 0;
+    font-size: 1.2rem;
+}
+.pill {
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.15);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+.pill--muted { color: var(--muted); }
+.pill--danger { color: var(--danger); border-color: rgba(251,113,133,0.4); }
+.pill--success { color: var(--success); border-color: rgba(74,222,128,0.4); }
+.pill--warning { color: var(--warning); border-color: rgba(250,204,21,0.5); }
+.detail-panel__section {
+    margin-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 0.8rem;
+}
+.strategy-list,
+.telemetry-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.strategy-item,
+.telemetry-item {
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 0.6rem 0.75rem;
+    background: rgba(255,255,255,0.02);
+}
+.strategy-item strong,
+.telemetry-item strong {
+    display: block;
+    font-size: 0.9rem;
+}
+.telemetry-selector {
+    margin-top: 1rem;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 0.8rem;
+    background: rgba(255,255,255,0.02);
+}
+.telemetry-selector__controls {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.6rem;
+}
+.telemetry-selector__options {
+    max-height: 260px;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.5rem;
+}
+.telemetry-option {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+.plan-panel pre {
+    background: var(--surface-alt);
+    border-radius: 16px;
+    padding: 0.8rem;
+    white-space: pre-wrap;
+    font-size: 0.9rem;
+    color: var(--muted);
+    min-height: 120px;
+}
+.plan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+.btn-ghost {
+    border: 1px solid var(--border);
+    background: transparent;
+    padding: 0.45rem 0.9rem;
+    border-radius: 12px;
+    color: var(--text);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+.btn-ghost:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+.site-footer {
+    margin-top: 1rem;
+    background: rgba(12, 21, 45, 0.7);
+    border-radius: 1.8rem;
+    padding: 1.6rem;
+    box-shadow: 0 36px 64px rgba(1, 5, 21, 0.6);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(16px);
+    text-align: center;
+}
+.site-footer__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+.site-footer__copy {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0;
+}
+.site-footer__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+.site-footer__nav a,
+a.site-footer__nav {
+    color: var(--muted);
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+.site-footer__nav a:hover,
+a.site-footer__nav:hover {
+    color: var(--accent);
+}
+.status-note {
+    color: var(--muted);
+    font-size: 0.82rem;
+    margin-top: 0.4rem;
+}
+.matrix-empty {
+    padding: 1rem;
+    color: var(--muted);
+    text-align: center;
+}
+.step-split {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+}
+.step-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+.step-panel h4 {
+    margin: 0;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-strong);
+}
+@media (max-width: 720px) {
+    body { padding: 1rem; }
+    .site-nav { border-radius: 1.4rem; }
+}
+    </style>
+</head>
+<body>
+    <div class="page">
+        <nav class="site-nav">
+            <div class="site-nav__inner">
+                <a class="site-brand" href="https://chintangurjar.com/">
+                    <span class="site-brand__mark"></span>
+                    <span class="site-brand__text">Cyber Frogy</span>
+                </a>
+                <div class="d-none d-md-flex site-menu">
+                    <a class="site-menu__link" href="https://chintangurjar.com/">Home</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/whoami/">Whoami</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/posts/">Blog</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/mindmaps/">Mindmaps</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/threat-actor-db/">Threat-Actor DB</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/github/">GitHub</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/checklists/">Checklists</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/kickstartcareer/">Kickstart Career</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/disclaimer/">Disclaimer</a>
+                </div>
+                <div class="site-nav__actions">
+                    <button class="navbar-toggler site-menu__toggle d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#site-menu-drawer" aria-controls="site-menu-drawer" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse site-menu__drawer d-md-none" id="site-menu-drawer">
+                <nav class="d-flex flex-column gap-2">
+                    <a class="site-menu__link" href="https://chintangurjar.com/">Home</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/whoami/">Whoami</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/posts/">Blog</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/mindmaps/">Mindmaps</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/threat-actor-db/">Threat-Actor DB</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/github/">GitHub</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/checklists/">Checklists</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/kickstartcareer/">Kickstart Career</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/disclaimer/">Disclaimer</a>
+                </nav>
+            </div>
+        </nav>
+        <header class="hero">
+            <div class="hero-header">
+                <p class="eyebrow">Detection Engineering & Content Development</p>
+                <a class="hero-back" href="index.html">Back to dashboard</a>
+            </div>
+            <h1>Operational coverage workbench for ATT&CK</h1>
+            <p>
+                Map your current analytics to MITRE ATT&CK, find the highest risk techniques without detections, and align telemetry requirements before kicking off new content development.
+                This tool shares the same dataset as the main dashboard so CTI, detection, and leadership work from a single source of truth.
+            </p>
+            <ol class="hero-steps">
+                <li><strong>Step 1:</strong> Set the ATT&CK domain, tactics, platforms, and telemetry you care about.</li>
+                <li><strong>Step 2:</strong> Use the gap board to prioritise work items and review MITRE detection guidance.</li>
+                <li><strong>Step 3:</strong> Inspect tactic-level analytics to understand overall coverage results.</li>
+                <li><strong>Step 4:</strong> Capture telemetry gaps and copy the detection plan summary for stakeholders.</li>
+            </ol>
+        </header>
+        <section class="card step-card">
+            <h3>Step 1 · Align your ATT&CK scope</h3>
+            <p class="step-card__hint">Pick the ATT&CK domain, tactics, platforms, and focus mode you want to review. KPIs update immediately.</p>
+            <div class="filters">
+                <div class="control">
+                    <label for="domain-select">Domain</label>
+                    <select id="domain-select"></select>
+                </div>
+                <div class="control">
+                    <label for="status-select">Coverage Focus</label>
+                    <select id="status-select">
+                        <option value="all">All statuses</option>
+                        <option value="covered">Covered</option>
+                        <option value="gap">Coverage gaps</option>
+                        <option value="telemetry">Needs telemetry</option>
+                    </select>
+                </div>
+                <div class="control">
+                    <label for="search-input">Keyword search</label>
+                    <input type="search" id="search-input" placeholder="Search techniques or IDs" />
+                </div>
+            </div>
+            <div class="control" style="margin-top:0.8rem;">
+                <label>Tactics</label>
+                <div class="chip-group" id="tactic-chips"></div>
+            </div>
+            <div class="control" style="margin-top:0.5rem;">
+                <label>Platforms</label>
+                <div class="chip-group" id="platform-chips"></div>
+            </div>
+            <div class="summary-grid" id="summary-grid"></div>
+            <p class="status-note" id="summary-note"></p>
+        </section>
+        <section class="card step-card">
+            <h3>Step 2 · Prioritise analytics development</h3>
+            <p class="step-card__hint">Work through the gap board, tag coverage decisions, and open MITRE detection guidance before handing work to engineers.</p>
+            <div class="step-split">
+                <div class="step-panel">
+                    <h4>Gap prioritisation board</h4>
+                    <div class="gap-board__list" id="gap-board"></div>
+                    <div class="gap-board__controls" id="gap-board-controls"></div>
+                </div>
+                <div class="step-panel">
+                    <div class="plan-header">
+                        <h4>Technique guidance</h4>
+                        <div class="gap-card__actions">
+                            <button class="btn-ghost" id="mark-covered-btn">Mark covered</button>
+                            <button class="btn-ghost" id="mark-gap-btn">Mark gap</button>
+                        </div>
+                    </div>
+                    <div id="detail-panel" class="detail-panel__empty">Select any technique in the board to review risk, detection strategies, analytics, and telemetry hints.</div>
+                </div>
+            </div>
+        </section>
+        <section class="card step-card">
+            <h3>Step 3 · Review detection coverage analytics</h3>
+            <p class="step-card__hint">Each tactic card highlights coverage %, remaining gaps, and telemetry blockers so you can explain results at a glance.</p>
+            <div class="matrix" id="matrix-grid"></div>
+        </section>
+        <section class="card step-card">
+            <h3>Step 4 · Align telemetry and share the plan</h3>
+            <p class="step-card__hint">Track which data sources you already collect, surface telemetry blockers, and export the coverage summary for stakeholders.</p>
+            <div class="plan-header">
+                <h4>Telemetry inventory</h4>
+                <button class="btn-ghost" id="reset-telemetry">Reset telemetry selections</button>
+            </div>
+            <div class="telemetry-selector">
+                <div class="telemetry-selector__controls">
+                    <input type="search" id="telemetry-search" placeholder="Search data components (DNS, Sysmon, EDR...)" />
+                    <button class="btn-ghost" id="telemetry-search-clear">Clear search</button>
+                </div>
+                <div class="telemetry-selector__options" id="telemetry-options"></div>
+            </div>
+            <div class="high-level-summary" id="high-level-summary"></div>
+            <div class="telemetry-ready" id="telemetry-ready"></div>
+            <div class="plan-panel">
+                <div class="plan-header">
+                    <h4>Detection plan summary</h4>
+                    <button class="btn-ghost" id="copy-plan">Copy summary</button>
+                </div>
+                <pre id="plan-text">Scope summary pending...</pre>
+            </div>
+        </section>
+        <footer class="site-footer">
+            <div class="site-footer__inner">
+                <a class="site-brand" href="https://chintangurjar.com/">
+                    <span class="site-brand__mark"></span>
+                    <span class="site-brand__text">Cyber Frogy</span>
+                </a>
+                <div class="site-footer__nav">
+                    <a class="site-footer__nav" href="https://chintangurjar.com/">Home</a>
+                    <a class="site-footer__nav" href="https://chintangurjar.com/whoami/">Whoami</a>
+                    <a class="site-footer__nav" href="https://chintangurjar.com/posts/">Blog</a>
+                    <a class="site-footer__nav" href="https://chintangurjar.com/mindmaps/">Mindmaps</a>
+                    <a class="site-footer__nav" href="https://chintangurjar.com/threat-actor-db/">Threat-Actor DB</a>
+                    <a class="site-footer__nav" href="https://chintangurjar.com/github/">GitHub</a>
+                    <a class="site-footer__nav" href="https://chintangurjar.com/checklists/">Checklists</a>
+                    <a class="site-footer__nav" href="https://chintangurjar.com/kickstartcareer/">Kickstart Career</a>
+                    <a class="site-footer__nav" href="https://chintangurjar.com/disclaimer/">Disclaimer</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script>
+const STORAGE_KEY = "leadershipCoverageSelections_v1";
+const TELEMETRY_KEY = "detectionEngineeringTelemetry_v1";
+const STOPWORDS = new Set(["the","this","that","with","from","have","will","into","their","about","there","which","when","what","your","such","also","they","been","than","over","through","where","these","those","after","before","because","while","within","between"]);
+const TACTIC_ORDER = ["Reconnaissance","Resource Development","Initial Access","Execution","Persistence","Privilege Escalation","Defense Evasion","Credential Access","Discovery","Lateral Movement","Collection","Command and Control","Exfiltration","Impact"];
+const GAP_PAGE_SIZE = 5;
+
+const state = {
+    domain: "enterprise-attack",
+    tactics: new Set(),
+    platforms: new Set(),
+    status: "all",
+    search: "",
+    telemetrySearch: "",
+    telemetry: new Set(),
+    coverage: new Map(),
+    techniques: [],
+    dataComponents: [],
+    strategyLookup: {},
+    analyticLookup: {},
+    detectionRelationships: {
+        techniqueToStrategies: {},
+        strategyToAnalytics: {},
+    },
+    selectedTechniqueId: null,
+    filteredTechniques: [],
+    gapPage: 0,
+};
+
+function loadCoverageFromStorage() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        state.coverage = new Map(parsed);
+    } catch (err) {
+        console.warn("Unable to parse coverage selections", err);
+    }
+}
+
+function persistCoverage() {
+    try {
+        const payload = JSON.stringify(Array.from(state.coverage.entries()));
+        localStorage.setItem(STORAGE_KEY, payload);
+    } catch (err) {
+        console.warn("Unable to persist coverage state", err);
+    }
+}
+
+function loadTelemetrySelection() {
+    try {
+        const raw = localStorage.getItem(TELEMETRY_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        state.telemetry = new Set(parsed);
+    } catch (err) {
+        console.warn("Unable to parse telemetry selection", err);
+    }
+}
+
+function persistTelemetrySelection() {
+    try {
+        const payload = JSON.stringify(Array.from(state.telemetry.values()));
+        localStorage.setItem(TELEMETRY_KEY, payload);
+    } catch (err) {
+        console.warn("Unable to persist telemetry filters", err);
+    }
+}
+
+function parseMetadata(metadata) {
+    const meta = {};
+    (metadata || "").split("|").forEach(entry => {
+        const [key, value] = entry.split(":");
+        if (!key || value === undefined) return;
+        meta[key.trim()] = value.trim();
+    });
+    return meta;
+}
+
+function normalizeList(value, fallback) {
+    if (!value) return fallback ? [fallback] : [];
+    return value.split(",").map(chunk => chunk.trim()).filter(Boolean);
+}
+
+function computeRiskScore(tactics, relationships, detection) {
+    let risk = 0.35;
+    risk += Math.min(relationships / 40, 0.35);
+    const highTactics = new Set(["Initial Access","Execution","Persistence","Privilege Escalation","Defense Evasion","Credential Access","Lateral Movement","Impact"]);
+    if (tactics.some(t => highTactics.has(t))) {
+        risk += 0.2;
+    }
+    if (!detection || detection.toLowerCase().includes("gap")) {
+        risk += 0.1;
+    }
+    return Math.min(risk, 1);
+}
+
+function syncChipState(containerId, activeSet) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.querySelectorAll(".chip").forEach(btn => {
+        const value = btn.dataset.value;
+        if (value === "__all") {
+            btn.classList.toggle("active", activeSet.size === 0);
+        } else {
+            btn.classList.toggle("active", activeSet.has(value));
+        }
+    });
+}
+
+function buildChips(containerId, values, activeSet, handler) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = "";
+    const allBtn = document.createElement("button");
+    allBtn.type = "button";
+    allBtn.className = "chip";
+    allBtn.dataset.value = "__all";
+    allBtn.textContent = "All";
+    allBtn.addEventListener("click", () => handler("__all"));
+    container.appendChild(allBtn);
+    values.forEach(value => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "chip";
+        btn.dataset.value = value;
+        btn.textContent = value;
+        btn.addEventListener("click", () => handler(value));
+        container.appendChild(btn);
+    });
+    syncChipState(containerId, activeSet);
+}
+
+function tokenize(text) {
+    return (text || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, " ")
+        .split(" ")
+        .filter(token => token.length >= 4 && !STOPWORDS.has(token));
+}
+
+function buildTechniqueObjects(data) {
+    const strategyRecords = data.records.filter(record => record.type === "Detection Strategy");
+    const analyticRecords = data.records.filter(record => record.type === "Analytic");
+    const dataComponents = data.records.filter(record => record.type === "Data Component").map(record => ({
+        id: record.id,
+        name: record.name,
+        summary: record.summary,
+        tokens: new Set(tokenize(record.name + " " + record.summary)),
+    }));
+    const techniqueRecords = data.records.filter(record => record.type === "Technique");
+    const strategyLookup = {};
+    strategyRecords.forEach(record => {
+        strategyLookup[record.id] = {
+            id: record.id,
+            name: record.name,
+            summary: record.summary,
+            url: record.url,
+            metadata: record.metadata,
+        };
+    });
+    const analyticLookup = {};
+    analyticRecords.forEach(record => {
+        analyticLookup[record.id] = {
+            id: record.id,
+            name: record.name,
+            summary: record.summary,
+            url: record.url,
+            strategy: (parseMetadata(record.metadata)["Strategy"] || "").trim(),
+        };
+    });
+
+    const techniques = techniqueRecords.map(record => {
+        const meta = parseMetadata(record.metadata);
+        const tactics = normalizeList(meta["Tactics"], "Unmapped");
+        const platforms = normalizeList(meta["Platforms"], "Unspecified");
+        const relationships = parseInt(meta["Relationships"], 10) || 0;
+        const detection = meta["Detection"] || "Gap";
+        const domains = (record.domains && record.domains.length) ? record.domains : ["enterprise-attack"];
+        return {
+            id: record.id,
+            name: record.name,
+            url: record.url,
+            summary: record.summary,
+            tactics,
+            platforms,
+            domains,
+            relationships,
+            detection,
+            risk: computeRiskScore(tactics, relationships, detection),
+            metadata: meta,
+            dataComponents: [],
+        };
+    });
+
+    techniques.forEach(tech => {
+        const tokens = new Set(tokenize(tech.name + " " + tech.summary));
+        const matches = [];
+        dataComponents.forEach(component => {
+            let overlap = 0;
+            component.tokens.forEach(token => {
+                if (tokens.has(token)) overlap += 1;
+            });
+            if (overlap > 0) {
+                matches.push({ component, score: overlap });
+            }
+        });
+        matches.sort((a, b) => b.score - a.score);
+        tech.dataComponents = matches.slice(0, 5).map(entry => ({
+            id: entry.component.id,
+            name: entry.component.name,
+            summary: entry.component.summary,
+            score: entry.score,
+        }));
+    });
+
+    return {
+        techniques,
+        dataComponents,
+        strategyLookup,
+        analyticLookup,
+    };
+}
+
+function isCovered(technique) {
+    return state.coverage.get(technique.id) === true;
+}
+
+function techniqueHasTelemetry(technique) {
+    if (!state.telemetry.size) return true;
+    if (!technique.dataComponents.length) return false;
+    return technique.dataComponents.some(component => state.telemetry.has(component.id));
+}
+
+function applyFilters() {
+    const searchTerm = state.search.toLowerCase();
+    const filtered = state.techniques.filter(technique => {
+        if (state.domain !== "all" && !technique.domains.includes(state.domain)) {
+            return false;
+        }
+        if (state.tactics.size && !technique.tactics.some(tactic => state.tactics.has(tactic))) {
+            return false;
+        }
+        if (state.platforms.size && !technique.platforms.some(platform => state.platforms.has(platform))) {
+            return false;
+        }
+        if (searchTerm) {
+            const blob = (technique.id + " " + technique.name + " " + technique.summary).toLowerCase();
+            if (!blob.includes(searchTerm)) {
+                return false;
+            }
+        }
+        if (state.status === "covered" && !isCovered(technique)) return false;
+        if (state.status === "gap" && isCovered(technique)) return false;
+        if (state.status === "telemetry" && state.telemetry.size && techniqueHasTelemetry(technique)) return false;
+        return true;
+    });
+    state.filteredTechniques = filtered;
+    return filtered;
+}
+
+function computeMetrics(filtered) {
+    const total = filtered.length;
+    const covered = filtered.filter(isCovered);
+    const coveragePct = total ? Math.round((covered.length / total) * 100) : 0;
+    const gaps = filtered.filter(tech => !isCovered(tech));
+    const highRiskGaps = gaps.filter(tech => tech.risk >= 0.7).sort((a, b) => b.risk - a.risk);
+    const telemetrySupported = filtered.filter(techniqueHasTelemetry);
+    const telemetryGaps = filtered.filter(tech => !techniqueHasTelemetry(tech));
+    const telemetryReadyGaps = state.telemetry.size
+        ? filtered.filter(tech => !isCovered(tech) && techniqueHasTelemetry(tech))
+        : [];
+    return {
+        total,
+        coveredCount: covered.length,
+        coveragePct,
+        gaps,
+        highRiskGaps,
+        telemetrySupportedCount: telemetrySupported.length,
+        telemetryGapCount: telemetryGaps.length,
+        telemetryGaps,
+        telemetryReadyGaps,
+    };
+}
+
+function renderSummary(metrics) {
+    const cards = [
+        { label: "Techniques in scope", value: metrics.total, detail: "After filters" },
+        { label: "Marked covered", value: metrics.coveredCount, detail: metrics.total ? `${metrics.coveragePct}% coverage` : "n/a" },
+        { label: "Coverage gaps", value: metrics.total - metrics.coveredCount, detail: `${metrics.highRiskGaps.length} high risk` },
+        { label: "Telemetry ready", value: state.telemetry.size ? metrics.telemetrySupportedCount : metrics.total, detail: state.telemetry.size ? `${metrics.telemetryGapCount} need telemetry` : "Tracking all telemetry" },
+    ];
+    const container = document.getElementById("summary-grid");
+    container.innerHTML = "";
+    cards.forEach(card => {
+        const block = document.createElement("div");
+        block.className = "summary-card";
+        block.innerHTML = `<span>${card.label}</span><strong>${card.value}</strong><small>${card.detail}</small>`;
+        container.appendChild(block);
+    });
+    const note = document.getElementById("summary-note");
+    if (!metrics.total) {
+        note.textContent = "No techniques match the current filters. Broaden the scope to continue.";
+    } else if (state.telemetry.size) {
+        note.textContent = `${metrics.telemetryGapCount} techniques still require telemetry you do not collect.`;
+    } else {
+        note.textContent = "Select telemetry sources to highlight ATT&CK techniques that still need log coverage.";
+    }
+}
+
+function tacticSort(a, b) {
+    const indexA = TACTIC_ORDER.indexOf(a);
+    const indexB = TACTIC_ORDER.indexOf(b);
+    if (indexA === -1 && indexB === -1) return a.localeCompare(b);
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    return indexA - indexB;
+}
+
+function renderMatrix(filtered) {
+    const container = document.getElementById("matrix-grid");
+    container.innerHTML = "";
+    if (!filtered.length) {
+        const empty = document.createElement("div");
+        empty.className = "matrix-empty";
+        empty.textContent = "No techniques to display. Adjust filters or telemetry selections.";
+        container.appendChild(empty);
+        return;
+    }
+    const tacticMap = new Map();
+    filtered.forEach(tech => {
+        tech.tactics.forEach(tactic => {
+            if (!tacticMap.has(tactic)) tacticMap.set(tactic, []);
+            tacticMap.get(tactic).push(tech);
+        });
+    });
+    const sortedTactics = Array.from(tacticMap.keys()).sort(tacticSort);
+    sortedTactics.forEach(tactic => {
+        const entries = tacticMap.get(tactic);
+        const total = entries.length;
+        const covered = entries.filter(isCovered);
+        const gaps = entries.filter(tech => !isCovered(tech));
+        const telemetryGaps = state.telemetry.size ? entries.filter(tech => !techniqueHasTelemetry(tech)) : [];
+        const coveragePct = total ? Math.round((covered.length / total) * 100) : 0;
+        const highRiskCount = gaps.filter(tech => tech.risk >= 0.7).length;
+
+        const card = document.createElement("article");
+        card.className = "matrix-tactic";
+        const header = document.createElement("header");
+        const title = document.createElement("h3");
+        title.textContent = tactic;
+        const count = document.createElement("span");
+        count.textContent = `${total} techniques`;
+        header.append(title, count);
+        card.appendChild(header);
+
+        const stats = document.createElement("div");
+        stats.className = "matrix-tactic__stats";
+        stats.innerHTML = `
+            <span>Coverage: ${coveragePct}%</span>
+            <span>Gaps: ${gaps.length}</span>
+            <span>Covered: ${covered.length}</span>
+            ${state.telemetry.size ? `<span>Telemetry gaps: ${telemetryGaps.length}</span>` : ""}
+        `;
+        card.appendChild(stats);
+
+        const progress = document.createElement("div");
+        progress.className = "matrix-tactic__progress";
+        const bar = document.createElement("span");
+        bar.style.width = `${coveragePct}%`;
+        progress.appendChild(bar);
+        card.appendChild(progress);
+
+        const note = document.createElement("p");
+        note.className = "status-note";
+        if (!gaps.length) {
+            note.textContent = "All techniques in this tactic are marked covered.";
+        } else {
+            const riskText = highRiskCount ? `${highRiskCount} high-risk gap${highRiskCount === 1 ? "" : "s"}` : "low-risk gaps only";
+            note.textContent = `${gaps.length} gap${gaps.length === 1 ? "" : "s"} remaining (${riskText}). Drill into Step 3 to prioritise.`;
+        }
+        card.appendChild(note);
+
+        container.appendChild(card);
+    });
+}
+
+function renderGapBoard(metrics) {
+    const container = document.getElementById("gap-board");
+    const controls = document.getElementById("gap-board-controls");
+    container.innerHTML = "";
+    if (controls) controls.innerHTML = "";
+    const baseList = metrics.highRiskGaps.length ? metrics.highRiskGaps : metrics.gaps;
+    if (!baseList.length) {
+        const empty = document.createElement("div");
+        empty.className = "matrix-empty";
+        empty.textContent = "No uncovered techniques remain in this scope.";
+        container.appendChild(empty);
+        return;
+    }
+    const totalPages = Math.max(1, Math.ceil(baseList.length / GAP_PAGE_SIZE));
+    if (state.gapPage >= totalPages) {
+        state.gapPage = totalPages - 1;
+    }
+    const start = state.gapPage * GAP_PAGE_SIZE;
+    const pageItems = baseList.slice(start, start + GAP_PAGE_SIZE);
+    pageItems.forEach(tech => {
+        const card = document.createElement("article");
+        card.className = "gap-card";
+        const header = document.createElement("header");
+        const title = document.createElement("div");
+        title.innerHTML = `<strong>${tech.id}</strong> · ${tech.name}`;
+        const risk = document.createElement("div");
+        risk.className = "gap-card__risk";
+        risk.textContent = `${Math.round(tech.risk * 100)}% risk`;
+        header.append(title, risk);
+        const meta = document.createElement("div");
+        meta.className = "gap-card__meta";
+        meta.textContent = `${tech.tactics.join(", ")} · ${tech.platforms.join(", ")}`;
+        const support = document.createElement("div");
+        support.className = "gap-card__meta";
+        if (state.telemetry.size) {
+            support.textContent = techniqueHasTelemetry(tech) ? "Telemetry ready" : "Telemetry gap";
+        } else {
+            support.textContent = "Telemetry not selected";
+        }
+        const actions = document.createElement("div");
+        actions.className = "gap-card__actions";
+        const inspectBtn = document.createElement("button");
+        inspectBtn.className = "btn-ghost";
+        inspectBtn.textContent = "Inspect";
+        inspectBtn.addEventListener("click", () => {
+            state.selectedTechniqueId = tech.id;
+            renderDetailPanel();
+        });
+        const coverBtn = document.createElement("button");
+        coverBtn.className = "btn-ghost";
+        coverBtn.textContent = "Mark covered";
+        coverBtn.addEventListener("click", () => {
+            state.coverage.set(tech.id, true);
+            persistCoverage();
+            refreshDashboard();
+        });
+        actions.append(inspectBtn, coverBtn);
+        card.append(header, meta, support, actions);
+        container.appendChild(card);
+    });
+    if (controls) {
+        const startDisplay = start + 1;
+        const endDisplay = Math.min(start + pageItems.length, baseList.length);
+        const info = document.createElement("span");
+        info.textContent = `Showing ${startDisplay}-${endDisplay} of ${baseList.length}`;
+        const nav = document.createElement("div");
+        nav.className = "gap-board__controls-buttons";
+        const prevBtn = document.createElement("button");
+        prevBtn.textContent = "Prev";
+        prevBtn.disabled = state.gapPage === 0;
+        prevBtn.addEventListener("click", () => {
+            if (state.gapPage > 0) {
+                state.gapPage -= 1;
+                refreshDashboard();
+            }
+        });
+        const nextBtn = document.createElement("button");
+        nextBtn.textContent = "Next";
+        nextBtn.disabled = state.gapPage >= totalPages - 1;
+        nextBtn.addEventListener("click", () => {
+            if (state.gapPage < totalPages - 1) {
+                state.gapPage += 1;
+                refreshDashboard();
+            }
+        });
+        nav.append(prevBtn, nextBtn);
+        controls.append(info, nav);
+    }
+}
+
+function renderDetailPanel() {
+    const container = document.getElementById("detail-panel");
+    const coverButton = document.getElementById("mark-covered-btn");
+    const gapButton = document.getElementById("mark-gap-btn");
+    const technique = state.techniques.find(tech => tech.id === state.selectedTechniqueId);
+    if (!technique) {
+        container.className = "detail-panel__empty";
+        container.textContent = "Select any technique in the matrix or prioritization list to view detection guidance.";
+        coverButton.disabled = true;
+        gapButton.disabled = true;
+        return;
+    }
+    coverButton.disabled = false;
+    gapButton.disabled = false;
+    coverButton.onclick = () => {
+        state.coverage.set(technique.id, true);
+        persistCoverage();
+        refreshDashboard();
+    };
+    gapButton.onclick = () => {
+        state.coverage.delete(technique.id);
+        persistCoverage();
+        refreshDashboard();
+    };
+    container.className = "";
+    const covered = isCovered(technique);
+    const telemetryMatch = techniqueHasTelemetry(technique);
+    const detectionRelation = state.detectionRelationships.techniqueToStrategies[technique.id] || [];
+    const strategyDetails = detectionRelation
+        .map(id => state.strategyLookup[id])
+        .filter(Boolean)
+        .map(strategy => {
+            const analyticsIds = state.detectionRelationships.strategyToAnalytics[strategy.id] || [];
+            const analytics = analyticsIds.map(id => state.analyticLookup[id]).filter(Boolean);
+            return { strategy, analytics };
+        });
+
+    container.innerHTML = `
+        <div>
+            <p class="pill ${covered ? "pill--success" : "pill--danger"}">${covered ? "Covered" : "Gap"}</p>
+            <h3 class="detail-panel__title">${technique.id} · ${technique.name}</h3>
+            <p class="status-note">${technique.summary || "No summary available."}</p>
+            <div class="gap-card__meta">${technique.tactics.join(", ")} · ${technique.platforms.join(", ")}</div>
+            <div class="gap-card__meta">Risk score: ${Math.round(technique.risk * 100)}% · Relationships: ${technique.relationships}</div>
+            <div class="gap-card__actions" style="margin-top:0.6rem;">
+                <a class="btn-ghost" href="${technique.url}" target="_blank" rel="noopener">Open on attack.mitre.org</a>
+            </div>
+        </div>
+        <div class="detail-panel__section">
+            <h4>Detection Strategies & Analytics</h4>
+            ${strategyDetails.length ? "" : "<p class='status-note'>MITRE detection strategies for this technique are not published yet. Use telemetry hints to bootstrap analytics.</p>"}
+            <div class="strategy-list">
+                ${strategyDetails.map(entry => `
+                    <div class="strategy-item">
+                        <strong>${entry.strategy.name} (${entry.analytics.length} analytics)</strong>
+                        <p class="status-note">${entry.strategy.summary || "No summary available."}</p>
+                        ${entry.analytics.length ? `<ul>${entry.analytics.slice(0,3).map(analytic => `<li>${analytic.name}</li>`).join("")}</ul>` : ""}
+                    </div>
+                `).join("")}
+            </div>
+        </div>
+    `;
+}
+
+function renderTelemetryOptions() {
+    const container = document.getElementById("telemetry-options");
+    container.innerHTML = "";
+    const query = state.telemetrySearch.toLowerCase();
+    state.dataComponents
+        .filter(comp => {
+            if (!query) return true;
+            return comp.name.toLowerCase().includes(query) || comp.summary.toLowerCase().includes(query);
+        })
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .forEach(component => {
+            const label = document.createElement("label");
+            label.className = "telemetry-option";
+            const input = document.createElement("input");
+            input.type = "checkbox";
+            input.checked = state.telemetry.has(component.id);
+            input.addEventListener("change", () => {
+                if (input.checked) {
+                    state.telemetry.add(component.id);
+                } else {
+                    state.telemetry.delete(component.id);
+                }
+                persistTelemetrySelection();
+                refreshDashboard();
+            });
+            const span = document.createElement("span");
+            span.textContent = component.name;
+            label.append(input, span);
+            container.appendChild(label);
+        });
+}
+
+function buildPlanText(metrics) {
+    const tacticScope = state.tactics.size ? Array.from(state.tactics).join(", ") : "All tactics";
+    const platformScope = state.platforms.size ? Array.from(state.platforms).join(", ") : "All platforms";
+    const lines = [];
+    lines.push(`Scope: ${state.domain === "all" ? "All domains" : state.domain} · ${tacticScope} · ${platformScope}.`);
+    lines.push(`Techniques in scope: ${metrics.total}. Covered: ${metrics.coveredCount} (${metrics.coveragePct}%). Gaps: ${metrics.total - metrics.coveredCount}.`);
+    if (state.telemetry.size) {
+        lines.push(`Telemetry ready: ${metrics.telemetrySupportedCount} techniques. ${metrics.telemetryGapCount} require new telemetry sources.`);
+    } else {
+        lines.push("Telemetry inventory not set. Add log sources to highlight telemetry gaps.");
+    }
+    const topGaps = metrics.highRiskGaps.slice(0, 3).map(tech => `${tech.id} (${Math.round(tech.risk * 100)}% · ${tech.tactics.join("/")})`);
+    if (topGaps.length) {
+        lines.push("High risk gaps to prioritize: " + topGaps.join("; ") + ".");
+    }
+    const telemetryList = metrics.telemetryGaps.slice(0, 3).map(tech => tech.id);
+    if (state.telemetry.size && telemetryList.length) {
+        lines.push("Telemetry blockers: " + telemetryList.join(", "));
+    }
+    if (state.telemetry.size && metrics.telemetryReadyGaps.length) {
+        lines.push(`Telemetry-ready techniques: ${metrics.telemetryReadyGaps.slice(0, 5).map(tech => tech.id).join(", ")}${metrics.telemetryReadyGaps.length > 5 ? "…" : ""}`);
+    }
+    return lines.join("\n");
+}
+
+function renderPlan(metrics) {
+    const text = buildPlanText(metrics);
+    document.getElementById("plan-text").textContent = text;
+}
+
+function renderHighLevelSummary(metrics) {
+    const container = document.getElementById("high-level-summary");
+    if (!container) return;
+    if (!metrics.total) {
+        container.textContent = "No techniques in scope. Adjust the filters above to begin.";
+        return;
+    }
+    const parts = [
+        `Coverage: ${metrics.coveredCount}/${metrics.total} (${metrics.coveragePct}%)`,
+        `High-risk gaps: ${metrics.highRiskGaps.length}`,
+        `Telemetry blockers: ${metrics.telemetryGapCount}`,
+    ];
+    if (state.telemetry.size) {
+        parts.push(`Telemetry-ready: ${metrics.telemetryReadyGaps.length}`);
+    }
+    container.textContent = parts.join(" · ");
+}
+
+function renderTelemetryReady(metrics) {
+    const container = document.getElementById("telemetry-ready");
+    if (!container) return;
+    container.innerHTML = "";
+    if (!state.telemetry.size) {
+        container.innerHTML = "<p class='status-note'>Check the telemetry sources you collect to see which gaps can be addressed immediately.</p>";
+        return;
+    }
+    if (!metrics.telemetryReadyGaps.length) {
+        container.innerHTML = "<p class='status-note'>No uncovered techniques currently meet the selected telemetry inputs.</p>";
+        return;
+    }
+    const title = document.createElement("strong");
+    title.textContent = "Telemetry-ready techniques";
+    const list = document.createElement("div");
+    list.className = "telemetry-ready__list";
+    metrics.telemetryReadyGaps.slice(0, 12).forEach(tech => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = tech.id;
+        button.addEventListener("click", () => {
+            state.selectedTechniqueId = tech.id;
+            renderDetailPanel();
+            document.getElementById("detail-panel").scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+        list.appendChild(button);
+    });
+    if (metrics.telemetryReadyGaps.length > 12) {
+        const more = document.createElement("span");
+        more.className = "status-note";
+        more.textContent = `+${metrics.telemetryReadyGaps.length - 12} more ready in Step 2`;
+        container.append(title, list, more);
+    } else {
+        container.append(title, list);
+    }
+}
+
+function copyPlan() {
+    const text = document.getElementById("plan-text").textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        const button = document.getElementById("copy-plan");
+        const original = button.textContent;
+        button.textContent = "Copied!";
+        setTimeout(() => (button.textContent = original), 2000);
+    }).catch(() => {});
+}
+
+function populateFilterOptions() {
+    const domainSelect = document.getElementById("domain-select");
+    const domains = new Set();
+    state.techniques.forEach(tech => tech.domains.forEach(domain => domains.add(domain)));
+    domainSelect.innerHTML = `<option value="all">All domains</option>` + Array.from(domains).sort().map(domain => `<option value="${domain}">${domain}</option>`).join("");
+    domainSelect.value = state.domain;
+
+    const tacticValues = Array.from(new Set(state.techniques.flatMap(tech => tech.tactics))).sort(tacticSort);
+    const platformValues = Array.from(new Set(state.techniques.flatMap(tech => tech.platforms))).sort();
+    buildChips("tactic-chips", tacticValues, state.tactics, value => {
+        if (value === "__all") {
+            state.tactics.clear();
+        } else if (state.tactics.has(value)) {
+            state.tactics.delete(value);
+        } else {
+            state.tactics.add(value);
+        }
+        refreshDashboard({ resetGapPage: true });
+    });
+    buildChips("platform-chips", platformValues, state.platforms, value => {
+        if (value === "__all") {
+            state.platforms.clear();
+        } else if (state.platforms.has(value)) {
+            state.platforms.delete(value);
+        } else {
+            state.platforms.add(value);
+        }
+        refreshDashboard({ resetGapPage: true });
+    });
+}
+
+function attachEventHandlers() {
+    document.getElementById("domain-select").addEventListener("change", event => {
+        state.domain = event.target.value;
+        refreshDashboard({ resetGapPage: true });
+    });
+    document.getElementById("status-select").addEventListener("change", event => {
+        state.status = event.target.value;
+        refreshDashboard({ resetGapPage: true });
+    });
+    document.getElementById("search-input").addEventListener("input", event => {
+        state.search = event.target.value;
+        refreshDashboard({ resetGapPage: true });
+    });
+    document.getElementById("telemetry-search").addEventListener("input", event => {
+        state.telemetrySearch = event.target.value;
+        renderTelemetryOptions();
+    });
+    document.getElementById("telemetry-search-clear").addEventListener("click", () => {
+        state.telemetrySearch = "";
+        document.getElementById("telemetry-search").value = "";
+        renderTelemetryOptions();
+    });
+    document.getElementById("reset-telemetry").addEventListener("click", () => {
+        state.telemetry.clear();
+        persistTelemetrySelection();
+        refreshDashboard({ resetGapPage: true });
+    });
+    document.getElementById("telemetry-search").value = state.telemetrySearch;
+    document.getElementById("copy-plan").addEventListener("click", copyPlan);
+}
+
+function updateDashboard() {
+    const filtered = applyFilters();
+    if (state.selectedTechniqueId && !filtered.some(tech => tech.id === state.selectedTechniqueId)) {
+        state.selectedTechniqueId = null;
+    }
+    const metrics = computeMetrics(filtered);
+    renderSummary(metrics);
+    renderMatrix(filtered);
+    renderGapBoard(metrics);
+    renderDetailPanel();
+    renderTelemetryOptions();
+    renderPlan(metrics);
+    renderHighLevelSummary(metrics);
+    renderTelemetryReady(metrics);
+    syncChipState("tactic-chips", state.tactics);
+    syncChipState("platform-chips", state.platforms);
+}
+
+function refreshDashboard(options = {}) {
+    if (options.resetGapPage) {
+        state.gapPage = 0;
+    }
+    updateDashboard();
+}
+
+async function init() {
+    try {
+        loadCoverageFromStorage();
+        loadTelemetrySelection();
+        const response = await fetch("dashboard-data.json");
+        if (!response.ok) throw new Error("Unable to load dashboard data");
+        const data = await response.json();
+        state.detectionRelationships = data.detectionRelationships || { techniqueToStrategies: {}, strategyToAnalytics: {} };
+        const mapped = buildTechniqueObjects(data);
+        state.techniques = mapped.techniques;
+        state.dataComponents = mapped.dataComponents;
+        state.strategyLookup = mapped.strategyLookup;
+        state.analyticLookup = mapped.analyticLookup;
+        populateFilterOptions();
+        attachEventHandlers();
+        updateDashboard();
+    } catch (err) {
+        document.getElementById("matrix-grid").innerHTML = `<div class="matrix-empty">Failed to load dashboard-data.json: ${err.message}</div>`;
+        console.error(err);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", init);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
