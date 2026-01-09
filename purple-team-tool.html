@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Purple Team & Adversary Simulation Board</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <style>
+:root {
+    color-scheme: dark;
+    --bg: #020617;
+    --surface: #0b1220;
+    --surface-soft: #131c33;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --accent: #38bdf8;
+    --accent-strong: #fbbf24;
+    --border: rgba(255,255,255,0.08);
+    --danger: #fb7185;
+    --success: #4ade80;
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 1.5rem;
+    background: radial-gradient(circle at top right, rgba(56,189,248,0.18), transparent 45%), var(--bg);
+    color: var(--text);
+    font-size: 0.92rem;
+}
+.page {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+.site-nav {
+    background: rgba(19, 28, 51, 0.75);
+    border-radius: 999px;
+    padding: 1.1rem 1.4rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 24px 48px rgba(2, 5, 16, 0.55);
+    backdrop-filter: blur(16px);
+}
+.site-nav__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+.site-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text) !important;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+.site-brand__mark {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #26de50, var(--accent));
+    box-shadow: 0 0 0 4px rgba(49, 85, 255, 0.16);
+}
+.site-menu {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.site-menu__link {
+    color: var(--text) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.78rem;
+    text-decoration: none;
+}
+.site-menu__link:hover { color: var(--accent-strong) !important; }
+.hero {
+    background: linear-gradient(125deg, rgba(124,58,237,0.32), rgba(3,105,161,0.24));
+    border-radius: 24px;
+    padding: 1.7rem;
+    border: 1px solid var(--border);
+    box-shadow: 0 28px 56px rgba(0,0,0,0.45);
+}
+.hero-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.hero .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.8rem;
+    color: var(--accent);
+    margin: 0;
+}
+.hero h1 {
+    margin: 0.2rem 0 0.4rem;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+}
+.hero p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.5;
+}
+.hero-back {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-strong);
+    text-decoration: none;
+}
+.hero-back:hover { color: var(--accent); }
+.hero-steps {
+    margin: 0.9rem 0 0;
+    padding-left: 1.1rem;
+    color: var(--muted);
+    line-height: 1.5;
+}
+.card {
+    background: var(--surface);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 1.1rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    box-shadow: 0 18px 36px rgba(0,0,0,0.45);
+}
+.card header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+.step-label {
+    color: var(--accent-strong);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+    margin: 0;
+}
+.step-hint {
+    margin: 0.2rem 0 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+.controls-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+}
+.input-control,
+select {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+    color: var(--text);
+    padding: 0.5rem 0.65rem;
+}
+label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 0.25rem;
+    display: block;
+}
+.muted { color: var(--muted); }
+.candidate-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+}
+.candidate-item {
+    padding: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 0.8rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.candidate-item:last-child { border-bottom: none; }
+.candidate-item strong { display: block; }
+.candidate-meta {
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+.action-btn,
+.ghost-btn,
+.copy-btn {
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: transparent;
+    color: var(--text);
+    padding: 0.4rem 0.9rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+.ghost-btn { color: var(--danger); border-color: rgba(251,113,133,0.6); }
+.pill {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0.18rem 0.7rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.pill--ok { background: rgba(74,222,128,0.15); color: var(--success); }
+.pill--gap { background: rgba(251,113,133,0.15); color: var(--danger); }
+.scenario-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.84rem;
+}
+.table-scroll {
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    overflow: auto;
+}
+.table-scroll + * {
+    margin-top: 0.6rem;
+}
+.scenario-table th,
+.scenario-table td {
+    padding: 0.5rem 0.35rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.scenario-table th {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    color: var(--muted);
+}
+.status-buttons {
+    display: inline-flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+}
+.status-chip {
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: transparent;
+    color: var(--text);
+    padding: 0.2rem 0.65rem;
+    font-size: 0.7rem;
+    cursor: pointer;
+}
+.status-chip.is-active {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+.stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.6rem;
+}
+.stat-card {
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 0.6rem;
+}
+.stat-card h4 {
+    margin: 0;
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+}
+.stat-card p {
+    margin: 0.3rem 0 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+textarea {
+    width: 100%;
+    min-height: 140px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.03);
+    color: var(--text);
+    padding: 0.6rem;
+    resize: vertical;
+}
+.placeholder {
+    text-align: center;
+    color: var(--muted);
+    padding: 1rem 0;
+}
+.error-banner {
+    border-radius: 14px;
+    border: 1px solid rgba(251,113,133,0.45);
+    background: rgba(251,113,133,0.12);
+    padding: 0.6rem 0.9rem;
+    color: var(--danger);
+    font-size: 0.85rem;
+}
+.site-footer {
+    margin-top: 1rem;
+    background: rgba(12, 21, 45, 0.75);
+    border-radius: 1.8rem;
+    padding: 1.6rem;
+    border: 1px solid rgba(255,255,255,0.12);
+    text-align: center;
+}
+.site-footer__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+.site-footer__nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+.site-footer__nav a {
+    color: var(--muted);
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+.site-footer__nav a:hover { color: var(--accent-strong); }
+@media (max-width: 768px) {
+    .site-nav { border-radius: 18px; }
+    .site-menu { flex-direction: column; align-items: center; }
+}
+    </style>
+</head>
+<body>
+    <div class="page">
+        <nav class="site-nav">
+            <div class="site-nav__inner">
+                <a class="site-brand" href="https://chintangurjar.com/">
+                    <span class="site-brand__mark"></span>
+                    <span class="site-brand__text">Cyber Frogy</span>
+                </a>
+                <nav class="site-menu">
+                    <a class="site-menu__link" href="https://chintangurjar.com/">Home</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/whoami/">Whoami</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/posts/">Blog</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/mindmaps/">Mindmaps</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/threat-actor-db/">Threat-Actor DB</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/github/">GitHub</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/checklists/">Checklists</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/kickstartcareer/">Kickstart Career</a>
+                    <a class="site-menu__link" href="https://chintangurjar.com/disclaimer/">Disclaimer</a>
+                </nav>
+            </div>
+        </nav>
+        <header class="hero">
+            <div class="hero-header">
+                <div>
+                    <p class="eyebrow">Purple teaming</p>
+                    <h1>Purple Team & Adversary Simulation Board</h1>
+                </div>
+                <a class="hero-back" href="index.html">Back to dashboard</a>
+            </div>
+            <p>Plan the next purple or red exercise in three quick moves: pick the threat profile, line up the ATT&CK techniques you care about, then log detections as the run unfolds. The tool keeps one playlist, one scoreboard, and one briefing.</p>
+            <ul class="hero-steps">
+                <li>Pick a MITRE adversary (or build your own mix) and add techniques with a single click.</li>
+                <li>Review expectations vs. likely gaps before the exercise starts.</li>
+                <li>Track detected vs. missed steps live and paste the generated summary into your follow-up.</li>
+            </ul>
+        </header>
+        <main class="stack">
+            <div id="tool-error" class="error-banner" style="display:none;"></div>
+            <section class="card">
+                <header>
+                    <div>
+                        <p class="step-label">1 · Scope the exercise</p>
+                        <p class="step-hint">Choose a MITRE adversary or keep it ad-hoc, then add the techniques you plan to emulate.</p>
+                    </div>
+                    <span class="muted" id="candidate-count">Loading…</span>
+                </header>
+                <div class="controls-grid">
+                    <div>
+                        <label for="profile-select">Threat profile</label>
+                        <select id="profile-select" class="input-control">
+                            <option value="__custom">Ad-hoc mix</option>
+                        </select>
+                        <p class="muted" id="profile-meta">Loading MITRE groups, malware, and campaigns…</p>
+                    </div>
+                    <div>
+                        <label for="candidate-search">Search techniques</label>
+                        <input type="search" id="candidate-search" class="input-control" placeholder="Search by ID, name, or description" autocomplete="off" />
+                    </div>
+                    <div>
+                        <label for="view-filter">Filter view</label>
+                        <select id="view-filter" class="input-control">
+                            <option value="all">All matching</option>
+                            <option value="high">High risk (≥70%)</option>
+                            <option value="gaps">Likely gaps only</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+                    <button class="action-btn" id="add-top-five">Add top 5 shown</button>
+                    <button class="ghost-btn" id="clear-candidates">Clear filters</button>
+                </div>
+                <ul class="candidate-list" id="candidate-list">
+                    <li class="placeholder">Loading dashboard-data.json…</li>
+                </ul>
+            </section>
+            <section class="card">
+                <header>
+                    <div>
+                        <p class="step-label">2 · Build the scenario playlist</p>
+                        <p class="step-hint">Name it, keep the list short, and sanity check which steps you actually expect to detect.</p>
+                    </div>
+                    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                        <input type="text" id="scenario-name" class="input-control" style="max-width:220px;" placeholder="Scenario name" />
+                        <button class="ghost-btn" id="clear-scenario">Clear plan</button>
+                    </div>
+                </header>
+                <div class="stat-row" id="scenario-stats"></div>
+                <div class="table-scroll">
+                    <table class="scenario-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Technique</th>
+                                <th>Expectation</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="scenario-table-body">
+                            <tr><td colspan="5" class="placeholder">Add techniques from the list above.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <section class="card">
+                <header>
+                    <div>
+                        <p class="step-label">3 · Track detections live</p>
+                        <p class="step-hint">Flip steps to detected or missed as soon as red executes them.</p>
+                    </div>
+                    <button class="ghost-btn" id="reset-status">Reset statuses</button>
+                </header>
+                <div class="stat-row" id="tracker-stats"></div>
+                <div id="tracker-board" class="candidate-list">
+                    <div class="placeholder">Add techniques to enable tracking.</div>
+                </div>
+            </section>
+            <section class="card">
+                <header>
+                    <div>
+                        <p class="step-label">4 · Share the summary</p>
+                        <p class="step-hint">Copy the text below into email, chat, or your detection backlog.</p>
+                    </div>
+                    <div style="display:flex;gap:0.6rem;align-items:center;">
+                        <button class="copy-btn" id="summary-copy">Copy summary</button>
+                        <span class="muted" id="summary-status"></span>
+                    </div>
+                </header>
+                <textarea id="summary-output" readonly>Build a scenario to generate the purple team summary.</textarea>
+            </section>
+        </main>
+        <footer class="site-footer">
+            <div class="site-footer__inner">
+                <a class="site-brand" href="https://chintangurjar.com/">
+                    <span class="site-brand__mark"></span>
+                    <span class="site-brand__text">Cyber Frogy</span>
+                </a>
+                <div class="site-footer__nav">
+                    <a href="https://chintangurjar.com/">Home</a>
+                    <a href="https://chintangurjar.com/whoami/">Whoami</a>
+                    <a href="https://chintangurjar.com/posts/">Blog</a>
+                    <a href="https://chintangurjar.com/mindmaps/">Mindmaps</a>
+                    <a href="https://chintangurjar.com/threat-actor-db/">Threat-Actor DB</a>
+                    <a href="https://chintangurjar.com/github/">GitHub</a>
+                    <a href="https://chintangurjar.com/checklists/">Checklists</a>
+                    <a href="https://chintangurjar.com/kickstartcareer/">Kickstart Career</a>
+                    <a href="https://chintangurjar.com/disclaimer/">Disclaimer</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+const DATA_URL = "dashboard-data.json";
+const COVERAGE_KEY = "leadershipCoverageSelections_v1";
+const SCENARIO_KEY = "purpleTeamScenario_v2";
+const CUSTOM_PROFILE = "__custom";
+const STATUS_OPTIONS = ["pending", "detected", "missed"];
+
+const state = {
+    records: [],
+    techniques: new Map(),
+    coverage: new Map(),
+    adversaries: [],
+    selectedProfile: CUSTOM_PROFILE,
+    filters: { search: "", view: "all" },
+    scenario: [],
+    scenarioName: "Exercise Playlist",
+    savedEntries: [],
+};
+
+document.addEventListener("DOMContentLoaded", init);
+
+async function init() {
+    attachListeners();
+    loadCoverage();
+    loadScenario();
+    try {
+        const payload = await fetchData();
+        prepareData(payload);
+    } catch (err) {
+        console.error(err);
+        showError("Unable to load dashboard-data.json. Serve the repo via `python3 -m http.server 8080`.");
+    }
+}
+
+function attachListeners() {
+    document.getElementById("candidate-search").addEventListener("input", event => {
+        state.filters.search = event.target.value.trim().toLowerCase();
+        renderCandidateList();
+    });
+    document.getElementById("view-filter").addEventListener("change", event => {
+        state.filters.view = event.target.value;
+        renderCandidateList();
+    });
+    document.getElementById("profile-select").addEventListener("change", event => {
+        setProfile(event.target.value);
+    });
+    document.getElementById("add-top-five").addEventListener("click", () => addTopFromList());
+    document.getElementById("clear-candidates").addEventListener("click", () => {
+        state.filters.search = "";
+        state.filters.view = "all";
+        const search = document.getElementById("candidate-search");
+        const view = document.getElementById("view-filter");
+        if (search) search.value = "";
+        if (view) view.value = "all";
+        renderCandidateList();
+    });
+    document.getElementById("scenario-name").addEventListener("input", event => {
+        state.scenarioName = event.target.value.trim() || "Exercise Playlist";
+        persistScenario();
+        renderSummary();
+    });
+    document.getElementById("clear-scenario").addEventListener("click", () => {
+        state.scenario = [];
+        persistScenario();
+        renderScenarioTable();
+        renderTracker();
+        renderSummary();
+    });
+    document.getElementById("reset-status").addEventListener("click", () => {
+        state.scenario.forEach(entry => entry.status = "pending");
+        persistScenario();
+        renderScenarioTable();
+        renderTracker();
+        renderSummary();
+    });
+    document.getElementById("summary-copy").addEventListener("click", copySummary);
+}
+
+function loadCoverage() {
+    try {
+        const raw = localStorage.getItem(COVERAGE_KEY);
+        if (raw) {
+            state.coverage = new Map(JSON.parse(raw));
+        }
+    } catch (err) {
+        console.warn("Unable to load coverage selections", err);
+    }
+}
+
+function loadScenario() {
+    try {
+        const raw = localStorage.getItem(SCENARIO_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        state.selectedProfile = parsed.profileId || CUSTOM_PROFILE;
+        state.scenarioName = parsed.scenarioName || state.scenarioName;
+        state.savedEntries = parsed.entries || [];
+        const input = document.getElementById("scenario-name");
+        if (input) input.value = state.scenarioName;
+    } catch (err) {
+        console.warn("Unable to load saved scenario", err);
+    }
+}
+
+async function fetchData() {
+    const response = await fetch(DATA_URL);
+    if (!response.ok) throw new Error("Fetch failed");
+    return response.json();
+}
+
+function prepareData(payload) {
+    if (!payload || !payload.records) {
+        showError("dashboard-data.json is missing records.");
+        return;
+    }
+    buildTechniques(payload.records);
+    buildAdversaries(payload.records, payload.adversaryTechniqueMap || {});
+    hydrateScenario();
+    populateProfileSelect();
+    setProfile(state.selectedProfile);
+    renderCandidateList();
+    renderScenarioTable();
+    renderTracker();
+    renderSummary();
+}
+
+function buildTechniques(records) {
+    records
+        .filter(record => record.type === "Technique")
+        .forEach(record => {
+            const meta = parseMetadata(record.metadata);
+            const tactics = normalizeList(meta["Tactics"], "Unmapped");
+            const relationships = parseInt(meta["Relationships"], 10) || 0;
+            const detection = meta["Detection"] || "Unknown";
+            const entry = {
+                id: record.id,
+                name: record.name,
+                summary: record.summary || "",
+                url: record.url,
+                tactics,
+                detection,
+                risk: computeRiskScore(tactics, relationships, detection),
+            };
+            state.techniques.set(entry.id, entry);
+        });
+}
+
+function buildAdversaries(records, map) {
+    const items = records
+        .filter(record => ["Group", "Software", "Campaign"].includes(record.type))
+        .map(record => {
+            const bucket = record.type === "Group" ? "groups" : record.type === "Software" ? "software" : "campaigns";
+            const usage = (map[bucket] && map[bucket][record.id]) || { techniques: [] };
+            return {
+                id: record.id,
+                name: record.name,
+                type: record.type,
+                techniqueIds: Array.from(new Set(usage.techniques || [])),
+                summary: record.summary || "",
+            };
+        })
+        .filter(entry => entry.techniqueIds.length);
+    items.sort((a, b) => b.techniqueIds.length - a.techniqueIds.length || a.name.localeCompare(b.name));
+    state.adversaries = items;
+}
+
+function populateProfileSelect() {
+    const select = document.getElementById("profile-select");
+    if (!select) return;
+    state.adversaries.forEach(entry => {
+        const option = document.createElement("option");
+        option.value = entry.id;
+        option.textContent = `${entry.type} · ${entry.name} (${entry.techniqueIds.length})`;
+        select.appendChild(option);
+    });
+    select.value = state.selectedProfile;
+}
+
+function hydrateScenario() {
+    if (!state.savedEntries.length) return;
+    state.scenario = state.savedEntries
+        .map(item => {
+            const base = state.techniques.get(item.id);
+            if (!base) return null;
+            return buildScenarioEntry(base, item.status || "pending");
+        })
+        .filter(Boolean);
+}
+
+function buildScenarioEntry(base, status = "pending") {
+    return {
+        id: base.id,
+        name: base.name,
+        url: base.url,
+        tactics: base.tactics,
+        detection: base.detection,
+        risk: base.risk,
+        covered: coverageStatus(base.id),
+        status,
+    };
+}
+
+function parseMetadata(metadata) {
+    const meta = {};
+    (metadata || "").split("|").forEach(part => {
+        const [key, value] = part.split(":");
+        if (!key || value === undefined) return;
+        meta[key.trim()] = value.trim();
+    });
+    return meta;
+}
+
+function normalizeList(value, fallback) {
+    if (!value) return fallback ? [fallback] : [];
+    return value.split(",").map(item => item.trim()).filter(Boolean);
+}
+
+function computeRiskScore(tactics, relationships, detection) {
+    let risk = 0.35;
+    risk += Math.min(relationships / 40, 0.35);
+    const critical = new Set(["Initial Access","Execution","Persistence","Privilege Escalation","Defense Evasion","Credential Access","Lateral Movement","Impact"]);
+    if (tactics.some(t => critical.has(t))) risk += 0.2;
+    if (!detection || detection.toLowerCase().includes("gap")) risk += 0.1;
+    return Math.min(risk, 1);
+}
+
+function coverageStatus(id) {
+    return state.coverage.get(id) === true;
+}
+
+function setProfile(profileId) {
+    if (!state.adversaries.find(entry => entry.id === profileId) && profileId !== CUSTOM_PROFILE) {
+        state.selectedProfile = CUSTOM_PROFILE;
+    } else {
+        state.selectedProfile = profileId;
+    }
+    const select = document.getElementById("profile-select");
+    if (select) select.value = state.selectedProfile;
+    renderProfileMeta();
+    persistScenario();
+    renderCandidateList();
+    renderSummary();
+}
+
+function renderProfileMeta() {
+    const meta = document.getElementById("profile-meta");
+    const profile = getSelectedProfile();
+    if (!meta) return;
+    if (!profile) {
+        meta.textContent = "Ad-hoc playlist: search for techniques and add what matters.";
+    } else {
+        meta.textContent = `${profile.type} selected · ${profile.techniqueIds.length} techniques available. Use the list below to pick the few you want to emulate.`;
+    }
+}
+
+function getSelectedProfile() {
+    return state.adversaries.find(entry => entry.id === state.selectedProfile) || null;
+}
+
+function renderCandidateList() {
+    const list = document.getElementById("candidate-list");
+    const counter = document.getElementById("candidate-count");
+    if (!list) return;
+    const entries = getCandidateTechniques();
+    list.innerHTML = "";
+    if (counter) counter.textContent = `${entries.length} shown`;
+    if (!entries.length) {
+        const li = document.createElement("li");
+        li.className = "placeholder";
+        li.textContent = "No techniques match the current filters.";
+        list.appendChild(li);
+        return;
+    }
+    entries.forEach(entry => {
+        const li = document.createElement("li");
+        li.className = "candidate-item";
+        const left = document.createElement("div");
+        const title = entry.url ? `<a href="${entry.url}" target="_blank" rel="noopener">${entry.name}</a>` : entry.name;
+        left.innerHTML = `<strong>${title}</strong><span class="candidate-meta">${entry.id} · ${Math.round(entry.risk * 100)}% risk</span>`;
+        const right = document.createElement("div");
+        right.style.display = "flex";
+        right.style.flexDirection = "column";
+        right.style.alignItems = "flex-end";
+        right.innerHTML = buildExpectationPill(entry.id);
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "action-btn";
+        button.textContent = state.scenario.some(item => item.id === entry.id) ? "Added" : "Add";
+        button.disabled = state.scenario.some(item => item.id === entry.id);
+        button.addEventListener("click", () => addTechnique(entry.id));
+        right.appendChild(button);
+        li.appendChild(left);
+        li.appendChild(right);
+        list.appendChild(li);
+    });
+}
+
+function getCandidateTechniques() {
+    let list = Array.from(state.techniques.values());
+    const profile = getSelectedProfile();
+    if (profile) {
+        const set = new Set(profile.techniqueIds);
+        list = list.filter(entry => set.has(entry.id));
+    }
+    if (state.filters.search) {
+        const query = state.filters.search;
+        list = list.filter(entry => {
+            const blob = `${entry.id} ${entry.name} ${entry.summary}`.toLowerCase();
+            return blob.includes(query);
+        });
+    }
+    if (state.filters.view === "high") {
+        list = list.filter(entry => entry.risk >= 0.7);
+    } else if (state.filters.view === "gaps") {
+        list = list.filter(entry => !coverageStatus(entry.id));
+    }
+    list.sort((a, b) => b.risk - a.risk || a.name.localeCompare(b.name));
+    return list.slice(0, 50);
+}
+
+function buildExpectationPill(id) {
+    const covered = coverageStatus(id);
+    return `<span class="pill ${covered ? "pill--ok" : "pill--gap"}">${covered ? "Expect detect" : "Likely gap"}</span>`;
+}
+
+function addTechnique(id) {
+    if (state.scenario.some(entry => entry.id === id)) return;
+    const base = state.techniques.get(id);
+    if (!base) return;
+    state.scenario.push(buildScenarioEntry(base));
+    persistScenario();
+    renderCandidateList();
+    renderScenarioTable();
+    renderTracker();
+    renderSummary();
+}
+
+function addTopFromList() {
+    const entries = getCandidateTechniques().slice(0, 5);
+    entries.forEach(entry => addTechnique(entry.id));
+}
+
+function removeTechnique(id) {
+    state.scenario = state.scenario.filter(entry => entry.id !== id);
+    persistScenario();
+    renderCandidateList();
+    renderScenarioTable();
+    renderTracker();
+    renderSummary();
+}
+
+function updateStatus(id, status) {
+    const entry = state.scenario.find(item => item.id === id);
+    if (!entry) return;
+    entry.status = status;
+    persistScenario();
+    renderScenarioTable();
+    renderTracker();
+    renderSummary();
+}
+
+function renderScenarioTable() {
+    const tbody = document.getElementById("scenario-table-body");
+    if (!tbody) return;
+    tbody.innerHTML = "";
+    if (!state.scenario.length) {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td colspan="5" class="placeholder">Add techniques from the list above.</td>`;
+        tbody.appendChild(row);
+        document.getElementById("scenario-stats").innerHTML = "";
+        return;
+    }
+    state.scenario.forEach((entry, index) => {
+        const row = document.createElement("tr");
+        const title = entry.url ? `<a href="${entry.url}" target="_blank" rel="noopener">${entry.name}</a>` : entry.name;
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td><strong>${title}</strong><br><span class="candidate-meta">${entry.id}</span></td>
+            <td>${buildExpectationPill(entry.id)}<br><span class="candidate-meta">${entry.detection}</span></td>
+            <td class="status-cell"></td>
+            <td style="text-align:right;"><button class="ghost-btn" data-remove="${entry.id}">Remove</button></td>
+        `;
+        const statusCell = row.querySelector(".status-cell");
+        const buttons = document.createElement("div");
+        buttons.className = "status-buttons";
+        STATUS_OPTIONS.forEach(option => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "status-chip";
+            button.dataset.status = option;
+            button.textContent = option === "pending" ? "Pending" : option.charAt(0).toUpperCase() + option.slice(1);
+            if (entry.status === option) button.classList.add("is-active");
+            button.addEventListener("click", () => updateStatus(entry.id, option));
+            buttons.appendChild(button);
+        });
+        statusCell.appendChild(buttons);
+        row.querySelector(`[data-remove="${entry.id}"]`).addEventListener("click", () => removeTechnique(entry.id));
+        tbody.appendChild(row);
+    });
+    renderScenarioStats();
+}
+
+function renderScenarioStats() {
+    const container = document.getElementById("scenario-stats");
+    if (!container) return;
+    const total = state.scenario.length;
+    const expected = state.scenario.filter(entry => entry.covered).length;
+    const gaps = total - expected;
+    container.innerHTML = "";
+    [
+        { label: "Steps planned", value: total },
+        { label: "Expected detections", value: expected },
+        { label: "Likely gaps", value: gaps },
+    ].forEach(card => {
+        const div = document.createElement("div");
+        div.className = "stat-card";
+        div.innerHTML = `<h4>${card.label}</h4><p>${card.value}</p>`;
+        container.appendChild(div);
+    });
+}
+
+function renderTracker() {
+    renderTrackerStats();
+    const board = document.getElementById("tracker-board");
+    if (!board) return;
+    board.innerHTML = "";
+    if (!state.scenario.length) {
+        const div = document.createElement("div");
+        div.className = "placeholder";
+        div.textContent = "Add techniques to enable tracking.";
+        board.appendChild(div);
+        return;
+    }
+    state.scenario.forEach((entry, index) => {
+        const block = document.createElement("div");
+        block.className = "candidate-item";
+        block.innerHTML = `
+            <div>
+                <strong>Step ${index + 1} · ${entry.name}</strong>
+                <span class="candidate-meta">${entry.tactics.join(", ")} · ${Math.round(entry.risk * 100)}% risk</span>
+            </div>
+        `;
+        const buttons = document.createElement("div");
+        buttons.className = "status-buttons";
+        STATUS_OPTIONS.forEach(option => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "status-chip";
+            button.textContent = option === "pending" ? "Pending" : option.charAt(0).toUpperCase() + option.slice(1);
+            if (entry.status === option) button.classList.add("is-active");
+            button.addEventListener("click", () => updateStatus(entry.id, option));
+            buttons.appendChild(button);
+        });
+        block.appendChild(buttons);
+        board.appendChild(block);
+    });
+}
+
+function renderTrackerStats() {
+    const container = document.getElementById("tracker-stats");
+    if (!container) return;
+    container.innerHTML = "";
+    if (!state.scenario.length) return;
+    const metrics = { detected: 0, missed: 0, pending: 0 };
+    state.scenario.forEach(entry => {
+        if (entry.status === "detected") metrics.detected += 1;
+        else if (entry.status === "missed") metrics.missed += 1;
+        else metrics.pending += 1;
+    });
+    [
+        { label: "Detected", value: metrics.detected },
+        { label: "Missed", value: metrics.missed },
+        { label: "Pending", value: metrics.pending },
+    ].forEach(card => {
+        const div = document.createElement("div");
+        div.className = "stat-card";
+        div.innerHTML = `<h4>${card.label}</h4><p>${card.value}</p>`;
+        container.appendChild(div);
+    });
+}
+
+function renderSummary() {
+    const textarea = document.getElementById("summary-output");
+    if (!textarea) return;
+    textarea.value = buildSummaryText();
+}
+
+function buildSummaryText() {
+    if (!state.scenario.length) {
+        return "Build a scenario to generate the purple team summary.";
+    }
+    const profile = getSelectedProfile();
+    const profileLabel = profile ? `${profile.type} ${profile.name}` : "ad-hoc mix";
+    const counts = { detected: 0, missed: 0, pending: 0 };
+    const gaps = [];
+    state.scenario.forEach(entry => {
+        if (entry.status === "detected") counts.detected += 1;
+        else if (entry.status === "missed") {
+            counts.missed += 1;
+            gaps.push(entry);
+        } else counts.pending += 1;
+        if (!entry.covered && entry.status !== "missed") {
+            gaps.push(entry);
+        }
+    });
+    const gapText = gaps
+        .slice(0, 4)
+        .map(entry => `${entry.id} (${Math.round(entry.risk * 100)}%)`)
+        .join(", ") || "None logged";
+    return [
+        `Scenario: ${state.scenarioName} · Profile: ${profileLabel}`,
+        `Steps planned: ${state.scenario.length}. Detected ${counts.detected}, missed ${counts.missed}, pending ${counts.pending}.`,
+        `Focus gaps: ${gapText}.`,
+        `Next: route the missed techniques to detection engineering and schedule a re-test next purple checkpoint.`,
+    ].join("\n");
+}
+
+function persistScenario() {
+    try {
+        const payload = {
+            profileId: state.selectedProfile,
+            scenarioName: state.scenarioName,
+            entries: state.scenario.map(entry => ({ id: entry.id, status: entry.status })),
+        };
+        localStorage.setItem(SCENARIO_KEY, JSON.stringify(payload));
+    } catch (err) {
+        console.warn("Unable to persist scenario", err);
+    }
+}
+
+async function copySummary() {
+    const textarea = document.getElementById("summary-output");
+    const status = document.getElementById("summary-status");
+    if (!textarea) return;
+    try {
+        await navigator.clipboard.writeText(textarea.value);
+        if (status) {
+            status.textContent = "Copied!";
+            setTimeout(() => (status.textContent = ""), 2200);
+        }
+    } catch (err) {
+        console.warn("Clipboard copy failed", err);
+        if (status) {
+            status.textContent = "Unable to copy";
+            setTimeout(() => (status.textContent = ""), 2200);
+        }
+    }
+}
+
+function showError(message) {
+    const banner = document.getElementById("tool-error");
+    if (!banner) return;
+    banner.textContent = message;
+    banner.style.display = "block";
+}
+    </script>
+</body>
+</html>
